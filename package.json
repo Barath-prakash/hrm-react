@@ -1,8 +1,8 @@
 {
-    "name": "berry-material-react-free",
+    "name": "innobs-hrm",
     "version": "3.3.1",
     "private": true,
-    "homepage": "https://berrydashboard.io/free",
+    "homepage": "https://hrm.innobs.in",
     "dependencies": {
         "@emotion/cache": "^11.9.3",
         "@emotion/react": "^11.9.3",

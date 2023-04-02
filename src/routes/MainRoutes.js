@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import { Navigate } from 'react-router-dom';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -20,9 +21,9 @@ const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
+const MainRoutes = (isAuthenticated) => ({
     path: '/',
-    element: <MainLayout />,
+    element: isAuthenticated ? <MainLayout /> : <Navigate to="/auth/login" />,
     children: [
         {
             path: '/',
@@ -41,7 +42,7 @@ const MainRoutes = {
             path: 'employees',
             children: [
                 {
-                    path: '/employees',
+                    path: '',
                     element: <Employees />
                 }
             ]
@@ -52,21 +53,11 @@ const MainRoutes = {
                 {
                     path: 'util-typography',
                     element: <UtilsTypography />
-                }
-            ]
-        },
-        {
-            path: 'utils',
-            children: [
+                },
                 {
                     path: 'util-color',
                     element: <UtilsColor />
-                }
-            ]
-        },
-        {
-            path: 'utils',
-            children: [
+                },
                 {
                     path: 'util-shadow',
                     element: <UtilsShadow />
@@ -79,12 +70,7 @@ const MainRoutes = {
                 {
                     path: 'tabler-icons',
                     element: <UtilsTablerIcons />
-                }
-            ]
-        },
-        {
-            path: 'icons',
-            children: [
+                },
                 {
                     path: 'material-icons',
                     element: <UtilsMaterialIcons />
@@ -95,7 +81,8 @@ const MainRoutes = {
             path: 'sample-page',
             element: <SamplePage />
         }
-    ]
-};
+    ],
+    auth: true
+});
 
 export default MainRoutes;

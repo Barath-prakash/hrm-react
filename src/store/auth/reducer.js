@@ -8,7 +8,7 @@ export const initialState = {
     isAuthenticated: false
 };
 
-// ==============================|| CUSTOMIZATION REDUCER ||============================== //
+// ==============================|| AUTH REDUCER ||============================== //
 
 const authReducer = (state = initialState, action) => {
     let id;

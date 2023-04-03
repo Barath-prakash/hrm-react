@@ -4,9 +4,11 @@ const authState = {
     isLoginLoading: false,
     loggedUser: {
         userName: '',
-        email: '',
+        userEmail: '',
         userId: '',
-        userToken: ''
+        userToken: '',
+        userRole: '',
+        orgId: ''
     }
 };
 

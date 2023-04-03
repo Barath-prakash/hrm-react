@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import authState from './states/authState';
 import useAuthMethodHandler from './handlers/useAuthMethodHandler';
 
@@ -18,7 +19,7 @@ const AppProvider = ({ children }) => {
     const [authProviderState, setAuthState] = useState(authState);
     const authMethods = useAuthMethodHandler({
         setState: setAuthState
-    });
+    }); // setAuthState, userLoginService
 
     const contextValue = {
         // App
@@ -29,6 +30,10 @@ const AppProvider = ({ children }) => {
         authMethods
     };
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
+};
+
+AppProvider.propTypes = {
+    children: PropTypes.node?.isRequired
 };
 
 export default AppProvider;

@@ -7,6 +7,7 @@ import {
     Box,
     Button,
     Checkbox,
+    CircularProgress,
     Divider,
     FormControl,
     FormControlLabel,
@@ -34,7 +35,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import Google from 'assets/images/icons/social-google.svg';
+import useAppContext from 'store/useAppContext';
 
+import SaveIcon from '@mui/icons-material/Save';
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
@@ -43,6 +46,12 @@ const FirebaseLogin = ({ ...others }) => {
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     const customization = useSelector((state) => state.customization);
     const [checked, setChecked] = useState(true);
+    const {
+        authMethods: { userLoginService },
+        authState: { isLoginLoading = false, loggedUser = {} } = {}
+    } = useAppContext();
+
+    console.log('loggedUser', loggedUser, 'dddd');
 
     const googleHandler = async () => {
         console.error('Login');
@@ -61,8 +70,8 @@ const FirebaseLogin = ({ ...others }) => {
         <>
             <Formik
                 initialValues={{
-                    email: 'info@codedthemes.com',
-                    password: '123456',
+                    email: 'demoadmin@gmail.com',
+                    password: 'resetPass123',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
@@ -70,6 +79,8 @@ const FirebaseLogin = ({ ...others }) => {
                     password: Yup.string().max(255).required('Password is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+                    console.log(values);
+                    userLoginService?.(values);
                     try {
                         if (scriptedRef.current) {
                             setStatus({ success: true });
@@ -151,12 +162,13 @@ const FirebaseLogin = ({ ...others }) => {
                             <AnimateButton>
                                 <Button
                                     disableElevation
-                                    disabled={isSubmitting}
                                     fullWidth
                                     size="large"
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
+                                    startIcon={isLoginLoading ? <CircularProgress size={17} /> : ''}
+                                    disabled={isSubmitting || isLoginLoading}
                                 >
                                     Sign in
                                 </Button>

@@ -1,29 +1,34 @@
 import { useCallback } from 'react';
 import useAppContext from './useAppContext';
 
-const BASE_URL = 'https://api.scholae.in/api';
-// const fetchOrPost = async (configData) => {
-//     const {authMethods} = useApp
-//   const { url = '', method = 'GET', payload = {}, headers } = configData;
-//   headers['Accept'] = 'application/json';
-//   if (method === 'POST') {
-//     headers['Content-Type'] = 'application/json';
-//   }
-//   const response = await fetch(`${BASE_URL}${url}`, {
-//       method,
-//       headers,
-//       ...(method === 'POST' && payload && { body: JSON.stringify(payload) })
-//   });
+// const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'https://api.scholae.innobs.in/api';
 
-//   if (response?.status === 401) {
-//     await signIn('okta', { callbackUrl: '/' });
-//     return;
-//   }
+const formatResponse = (formatData) => {
+    const { data, sourceFormat, returnType, options = {} } = formatData;
+    if (Array.isArray(sourceFormat) && returnType === 'object') {
+        let returnObj = {};
+        sourceFormat?.map((el) => {
+            returnObj = {
+                ...returnObj,
+                [el.change]: data?.[el?.actual]
+            };
+        });
+        return returnObj;
+    } else if (options?.readContent && Array.isArray(data?.content) && Array.isArray(sourceFormat) && returnType === 'array') {
+        const returnList = data?.map((mainItem) => {
+            let returnObj = {};
+            sourceFormat?.map((el) => {
+                returnObj = {
+                    ...returnObj,
+                    [el?.change]: data?.[el?.actual]
+                };
+            });
+        });
 
-//   return await response.json();
-// };
-
-// export default fetchOrPost;
+        return { ...data, content: returnList };
+    }
+};
 
 function useApiCall() {
     const { authStore: { loggedUser: { userToken = '' } = {} } = {}, setAppError } = useAppContext();
@@ -36,12 +41,16 @@ function useApiCall() {
             headers = {},
             loadingParam = '',
             stateParam = '',
-            setAppState
+            setAppState,
+            sourceFormat,
+            returnType,
+            readContent = false
             // test
         } = configData;
 
         headers['Accept'] = 'application/json';
         if (method === 'POST') headers['Content-Type'] = 'application/json';
+        if (userToken) headers['Authorization'] = `Bearer ${userToken}`;
 
         loadingParam && setAppState?.(loadingParam, true);
         setAppError?.(null);
@@ -52,11 +61,13 @@ function useApiCall() {
                 ...(method === 'POST' && payload && { body: JSON.stringify(payload) })
             });
             const data = await response?.json();
-            stateParam && setAppState?.(stateParam, data);
+            const resData = sourceFormat ? formatResponse({ data, sourceFormat, returnType, options: { readContent } }) : data;
+            stateParam && setAppState?.(stateParam, resData);
             setAppState?.(loadingParam, false);
-            return data;
+            return resData;
         } catch (error) {
-            if (response?.status === 401) {
+            console.error(`${url} - error: `, error);
+            if (error?.status === 401) {
                 console.log('Not-authorized');
                 return;
             }

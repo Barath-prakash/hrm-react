@@ -11,3 +11,15 @@ export const capitalize = (str) => {
     }
     return '';
 };
+
+export const setLocalStorage = (key, value) => {
+    if (key && value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+};
+
+export const getLocalStorage = (key) => {
+    if (localStorage.getItem(key)) {
+        return JSON.parse(localStorage.getItem(key));
+    }
+};

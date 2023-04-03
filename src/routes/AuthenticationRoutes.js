@@ -6,8 +6,8 @@ import MinimalLayout from 'layout/MinimalLayout';
 import NotFoundPage from 'views/pages/notfound';
 
 // login option 3 routing
-const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login')));
-const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register3')));
+const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/auth/Login')));
+const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/auth/Register3')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 

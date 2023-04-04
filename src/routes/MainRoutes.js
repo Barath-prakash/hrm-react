@@ -4,6 +4,7 @@ import { lazy } from 'react';
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import { Navigate } from 'react-router-dom';
+import NotFoundPage from 'views/pages/notfound';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -33,7 +34,7 @@ const MainRoutes = (isAuthenticated) => ({
             path: 'dashboard',
             children: [
                 {
-                    path: 'default',
+                    path: '',
                     element: <DashboardDefault />
                 }
             ]
@@ -80,9 +81,12 @@ const MainRoutes = (isAuthenticated) => ({
         {
             path: 'sample-page',
             element: <SamplePage />
+        },
+        {
+            path: '*',
+            element: <NotFoundPage />
         }
-    ],
-    auth: true
+    ]
 });
 
 export default MainRoutes;

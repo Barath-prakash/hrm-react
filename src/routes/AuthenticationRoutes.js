@@ -4,6 +4,7 @@ import { lazy } from 'react';
 import Loadable from 'ui-component/Loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import NotFoundPage from 'views/pages/notfound';
+import { Navigate } from 'react-router-dom';
 
 // login option 3 routing
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/auth/Login')));
@@ -25,11 +26,9 @@ const AuthenticationRoutes = (isAuthenticated) => ({
         },
         {
             path: '*',
-            element: <NotFoundPage />,
-            auth: false
+            element: <NotFoundPage />
         }
-    ],
-    auth: false
+    ]
 });
 
 export default AuthenticationRoutes;

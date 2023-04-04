@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
@@ -16,6 +16,7 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 // ==============================|| SIDEBAR MENU LIST ITEMS ||============================== //
 
 const NavItem = ({ item, level }) => {
+    const navigate = useNavigate();
     const theme = useTheme();
     const dispatch = useDispatch();
     const customization = useSelector((state) => state.customization);
@@ -36,7 +37,7 @@ const NavItem = ({ item, level }) => {
 
     let itemTarget = '_self';
     if (item.target) {
-        itemTarget = '_blank';
+        itemTarget = '_self';
     }
 
     let listItemProps = {
@@ -47,8 +48,10 @@ const NavItem = ({ item, level }) => {
     }
 
     const itemHandler = (id) => {
-        dispatch({ type: MENU_OPEN, id });
-        if (matchesSM) dispatch({ type: SET_MENU, opened: false });
+        // dispatch({ type: MENU_OPEN, id });
+        // if (matchesSM) dispatch({ type: SET_MENU, opened: false });
+        console.log('nnnnnn', item);
+        navigate(item?.url);
     };
 
     // active menu item on page load

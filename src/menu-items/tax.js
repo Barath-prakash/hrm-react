@@ -9,7 +9,7 @@ const icons = {
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const payroll = {
-    id: 'payroll',
+    id: 'tax',
     title: 'Tax',
     type: 'group',
     children: [

@@ -1,17 +1,20 @@
-import { useRoutes, Navigate, Route } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 
 // routes
 import MainRoutes from './MainRoutes';
 import AuthenticationRoutes from './AuthenticationRoutes';
-import useAppStore from 'store/useAppStore';
+import useAppContext from 'store/useAppContext';
+import { getLocalStorage } from 'utils/commonFunc';
+import { LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
 
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-    const { authStore } = useAppStore();
-    const isAuthenticated = authStore?.isAuthenticated;
-
-    console.log('authStore', authStore);
+    const userId = getLocalStorage(LOCAL_STORAGE_LOGGED_USER)?.userId;
+    const {
+        authState: { isAuthenticated: isAuth }
+    } = useAppContext();
+    const isAuthenticated = !!(isAuth || userId);
 
     const routes = [MainRoutes(isAuthenticated), AuthenticationRoutes(isAuthenticated)];
     const AppRoutes = useRoutes(routes);

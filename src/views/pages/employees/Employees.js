@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import CustomRowColumns from 'ui-component/CustomRowColumns';
-import { CONST_CustomCard, CONST_EMPLOYEES } from 'utils/constants';
+import { COMP_CustomCard, CONST_EMPLOYEES } from 'utils/constants';
 
 const emps = [
     {
@@ -73,6 +73,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const operation = {
+    method: '',
+    url: '',
+    payload: {},
+    loadingParam: '',
+    stateParam: '',
+    pageParams: { page: 1, size: 10 },
+    pageParam: '',
+    message: ''
+};
+
 const Employees = () => {
     const classes = useStyles();
 
@@ -80,7 +91,7 @@ const Employees = () => {
         <Box className={classes.root}>
             <CustomRowColumns
                 listToLoop={emps}
-                componentName={CONST_CustomCard}
+                componentName={COMP_CustomCard}
                 componentProps={{ showStatus: true, showMore: true, componentFor: CONST_EMPLOYEES }}
             />
         </Box>

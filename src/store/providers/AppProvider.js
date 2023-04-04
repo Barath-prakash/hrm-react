@@ -1,7 +1,11 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import authState from './states/authState';
 import useAuthMethodHandler from './handlers/useAuthMethodHandler';
+import { LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
+import { getLocalStorage } from 'utils/commonFunc';
+import { setContextState } from './handlers/utils';
+import useCrudMethodHandler from './handlers/useCrudMethodHandler';
 
 // Define a context
 export const AppContext = createContext({
@@ -17,17 +21,32 @@ export const AppContext = createContext({
 const AppProvider = ({ children }) => {
     const [appError, setAppError] = useState('');
     const [authProviderState, setAuthState] = useState(authState);
+
+    useEffect(() => {
+        if (!authProviderState?.loggedUser?.userToken) {
+            const user = getLocalStorage(LOCAL_STORAGE_LOGGED_USER);
+            if (user?.userId) {
+                setContextState(setAuthState, 'loggedUser', user);
+                setContextState(setAuthState, 'isAuthenticated', true);
+            }
+        }
+    }, [authProviderState?.loggedUser?.userToken]);
+
     const authMethods = useAuthMethodHandler({
         setState: setAuthState
     }); // setAuthState, userLoginService
 
+    const crudMethods = useCrudMethodHandler();
+
     const contextValue = {
-        // App
+        //** App */
         appError,
         setAppError,
-        // Auth
+        //** Auth */
         authState: authProviderState,
-        authMethods
+        authMethods,
+        //** Crud */
+        crudMethods
     };
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

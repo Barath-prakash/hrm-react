@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import useAppContext from './useAppContext';
+import { setContextState } from './providers/handlers/utils';
 
 // const BASE_URL = 'http://localhost:5000/api';
 const BASE_URL = 'https://api.scholae.innobs.in/api';
@@ -41,7 +42,7 @@ function useApiCall() {
             headers = {},
             loadingParam = '',
             stateParam = '',
-            setAppState,
+            setState,
             sourceFormat,
             returnType,
             readContent = false
@@ -52,7 +53,7 @@ function useApiCall() {
         if (method === 'POST') headers['Content-Type'] = 'application/json';
         if (userToken) headers['Authorization'] = `Bearer ${userToken}`;
 
-        loadingParam && setAppState?.(loadingParam, true);
+        loadingParam && setContextState?.(setState, loadingParam, true);
         setAppError?.(null);
         try {
             const response = await fetch(`${BASE_URL}${url}`, {
@@ -62,8 +63,8 @@ function useApiCall() {
             });
             const data = await response?.json();
             const resData = sourceFormat ? formatResponse({ data, sourceFormat, returnType, options: { readContent } }) : data;
-            stateParam && setAppState?.(stateParam, resData);
-            setAppState?.(loadingParam, false);
+            stateParam && setContextState?.(setState, stateParam, resData);
+            setContextState?.(setState, loadingParam, false);
             return resData;
         } catch (error) {
             console.error(`${url} - error: `, error);
@@ -71,7 +72,7 @@ function useApiCall() {
                 console.log('Not-authorized');
                 return;
             }
-            loadingParam && setAppState?.(loadingParam, false);
+            loadingParam && setContextState?.(setState, loadingParam, false);
             setAppError?.(error);
         }
     }, []);

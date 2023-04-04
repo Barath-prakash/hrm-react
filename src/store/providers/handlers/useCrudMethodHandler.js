@@ -1,26 +1,35 @@
 import { useCallback } from 'react';
 import useApiCall from 'store/useApiCall';
-// import useAppContext from 'store/useAppContext';
-// import { setLocalStorage } from 'utils/commonFunc';
-// import { LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
-// import { setContextState } from './utils';
 
-const useCrudMethodHandler = () => {
+const useCrudMethodHandler = ({ contextState }) => {
     const api = useApiCall();
 
-    const postService = useCallback(async (postData) => {
-        const { method, url, payload, loadingParam, stateParam, setState } = postData;
-        await api({
-            method,
-            payload,
-            url,
-            loadingParam,
-            stateParam,
-            setState
-        });
-    });
+    const crudService = useCallback(
+        async (postData) => {
+            const {
+                // method - payload from crudUtils
+                method,
+                url,
+                loadingParam,
+                stateParam,
+                payload,
+                setState // setState from component. Eg: employees -> setEmployeesState
+            } = postData;
+            await api({
+                method,
+                url,
+                payload,
+                loadingParam,
+                stateParam,
+                setState,
+                // contextState from handler
+                contextState
+            });
+        },
+        [api, contextState]
+    );
 
-    return { postService };
+    return { crudService };
 };
 
 export default useCrudMethodHandler;

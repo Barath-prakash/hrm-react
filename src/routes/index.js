@@ -5,12 +5,12 @@ import MainRoutes from './MainRoutes';
 import AuthenticationRoutes from './AuthenticationRoutes';
 import useAppContext from 'store/useAppContext';
 import { getLocalStorage } from 'utils/commonFunc';
-import { LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
+import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
 
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-    const userId = getLocalStorage(LOCAL_STORAGE_LOGGED_USER)?.userId;
+    const userId = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER)?.userId;
     const {
         authState: { isAuthenticated: isAuth }
     } = useAppContext();

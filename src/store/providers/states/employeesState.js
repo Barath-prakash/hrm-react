@@ -1,10 +1,16 @@
-const authState = {
-    employeeData: {}, // getAll
-    employeeForm: {}, // post
-    employee: {}, // get
+const employeesState = {
+    // Data
+    employeesData: {}, // getAll
+    employeesForm: {}, // post/put
+    employeesOne: {}, // get
+    page: 1,
+    size: 10,
+    // Loading
     getAllFetching: false,
     getFetching: false,
-    postOrPuting: false
+    posting: false,
+    putting: false,
+    deleting: false
 };
 
-export default authState;
+export default employeesState;

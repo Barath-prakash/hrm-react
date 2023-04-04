@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import CustomRowColumns from 'ui-component/CustomRowColumns';
-import { COMP_CustomCard, CONST_EMPLOYEES } from 'utils/constants';
+import { COMP_CustomCard, CONST_MODULE_EMPLOYEES } from 'utils/constants';
+import useAppContext from 'store/useAppContext';
+import { formActionGetAll } from 'utils/crudUtils';
 
 const emps = [
     {
@@ -73,26 +75,35 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const operation = {
-    method: '',
-    url: '',
-    payload: {},
-    loadingParam: '',
-    stateParam: '',
-    pageParams: { page: 1, size: 10 },
-    pageParam: '',
-    message: ''
-};
-
 const Employees = () => {
     const classes = useStyles();
+    const {
+        crudMethods,
+        employeesMethods: { setEmployeesState },
+        employeesState: { employeesData, page, size }
+    } = useAppContext();
+
+    const fetchAllEmployees = () => {
+        crudMethods.crudService({
+            setState: setEmployeesState,
+            ...formActionGetAll({
+                module: CONST_MODULE_EMPLOYEES,
+                page,
+                size
+            })
+        });
+    };
+
+    useEffect(() => fetchAllEmployees(), []);
+
+    console.log('employeesData', employeesData);
 
     return (
         <Box className={classes.root}>
             <CustomRowColumns
                 listToLoop={emps}
                 componentName={COMP_CustomCard}
-                componentProps={{ showStatus: true, showMore: true, componentFor: CONST_EMPLOYEES }}
+                componentProps={{ showStatus: true, showMore: true, componentFor: CONST_MODULE_EMPLOYEES }}
             />
         </Box>
     );

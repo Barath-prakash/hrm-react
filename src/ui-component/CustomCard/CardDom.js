@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Avatar, Card, CardActionArea, CardContent, IconButton, Typography, Grid } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { MoreVert } from '@mui/icons-material';
-import { CONST_EMPLOYEES } from 'utils/constants';
+import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
 import CustomStatus from 'ui-component/Common/CustomStatus';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +51,7 @@ const CardDOM = (props) => {
                         )}
                     </Box>
                     <CardActionArea>
-                        {componentFor === CONST_EMPLOYEES && (
+                        {componentFor === CONST_MODULE_EMPLOYEES && (
                             <>
                                 <Box display="flex" alignItems="center" justifyContent="center" padding={1}>
                                     <Avatar src={customCardInfo.image} sx={{ width: 80, height: 80 }} />

@@ -1,8 +1,9 @@
 import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import authState from './states/authState';
+import employeesState from './states/employeesState';
 import useAuthMethodHandler from './handlers/useAuthMethodHandler';
-import { LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
+import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
 import { getLocalStorage } from 'utils/commonFunc';
 import { setContextState } from './handlers/utils';
 import useCrudMethodHandler from './handlers/useCrudMethodHandler';
@@ -20,33 +21,41 @@ export const AppContext = createContext({
 // Define a component that provides data to the context
 const AppProvider = ({ children }) => {
     const [appError, setAppError] = useState('');
-    const [authProviderState, setAuthState] = useState(authState);
+    const [authLocalState, setAuthState] = useState(authState);
+    const [employeesLocalState, setEmployeesState] = useState(employeesState);
+
+    const contextState = {
+        authState: authLocalState
+    };
 
     useEffect(() => {
-        if (!authProviderState?.loggedUser?.userToken) {
-            const user = getLocalStorage(LOCAL_STORAGE_LOGGED_USER);
+        if (!authLocalState?.loggedUser?.userToken) {
+            const user = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER);
             if (user?.userId) {
                 setContextState(setAuthState, 'loggedUser', user);
                 setContextState(setAuthState, 'isAuthenticated', true);
             }
         }
-    }, [authProviderState?.loggedUser?.userToken]);
+    }, [authLocalState?.loggedUser?.userToken]);
 
     const authMethods = useAuthMethodHandler({
         setState: setAuthState
     }); // setAuthState, userLoginService
 
-    const crudMethods = useCrudMethodHandler();
+    const crudMethods = useCrudMethodHandler({ contextState });
 
     const contextValue = {
         //** App */
         appError,
         setAppError,
         //** Auth */
-        authState: authProviderState,
+        authState: authLocalState,
         authMethods,
         //** Crud */
-        crudMethods
+        crudMethods,
+        //** Employees */
+        employeesState: employeesLocalState,
+        employeesMethods: { setEmployeesState }
     };
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import useApiCall from 'store/useApiCall';
 import useAppContext from 'store/useAppContext';
 import { setLocalStorage } from 'utils/commonFunc';
-import { LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
+import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
 // import { setContextState } from './utils';
 
 const useAuthMethodHandler = ({ setState }) => {
@@ -29,7 +29,7 @@ const useAuthMethodHandler = ({ setState }) => {
             returnType: 'object'
         });
         console.log('res', res);
-        setLocalStorage(LOCAL_STORAGE_LOGGED_USER, res);
+        setLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER, res);
     });
 
     return { userLoginService };

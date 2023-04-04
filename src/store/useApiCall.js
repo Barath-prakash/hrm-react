@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import useAppContext from './useAppContext';
 import { setContextState } from './providers/handlers/utils';
 
 // const BASE_URL = 'http://localhost:5000/api';
@@ -31,9 +30,7 @@ const formatResponse = (formatData) => {
     }
 };
 
-function useApiCall() {
-    const { authStore: { loggedUser: { userToken = '' } = {} } = {}, setAppError } = useAppContext();
-    console.log({ userToken });
+const useApiCall = () => {
     const callApi = useCallback(async (configData) => {
         const {
             url = '',
@@ -45,12 +42,15 @@ function useApiCall() {
             setState,
             sourceFormat,
             returnType,
-            readContent = false
-            // test
+            readContent = false,
+            // contextState from handler
+            contextState
         } = configData;
+        const { authState: { loggedUser: { userToken = '' } = {} } = {}, setAppError } = contextState;
+        console.log({ userToken });
 
         headers['Accept'] = 'application/json';
-        if (method === 'POST') headers['Content-Type'] = 'application/json';
+        if (['POST', 'PUT'].includes(method)) headers['Content-Type'] = 'application/json';
         if (userToken) headers['Authorization'] = `Bearer ${userToken}`;
 
         loadingParam && setContextState?.(setState, loadingParam, true);
@@ -59,7 +59,7 @@ function useApiCall() {
             const response = await fetch(`${BASE_URL}${url}`, {
                 method,
                 headers,
-                ...(method === 'POST' && payload && { body: JSON.stringify(payload) })
+                ...(['POST', 'PUT'].includes(method) && payload && { body: JSON.stringify(payload) })
             });
             const data = await response?.json();
             const resData = sourceFormat ? formatResponse({ data, sourceFormat, returnType, options: { readContent } }) : data;
@@ -78,6 +78,6 @@ function useApiCall() {
     }, []);
 
     return callApi;
-}
+};
 
 export default useApiCall;

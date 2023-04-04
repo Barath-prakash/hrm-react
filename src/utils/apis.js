@@ -1,8 +1,8 @@
 const API_EMPLOYEES = {
-    getAll: '',
+    getAll: { api: '/admin/get-school-employees-by-page', ids: ['orgId'] },
     post: '',
+    get: '',
     put: '',
-    update: '',
     delete: ''
 };
 

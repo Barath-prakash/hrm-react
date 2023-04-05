@@ -1,8 +1,9 @@
 import React from 'react';
-import CardDOM from './CardDom';
+import CardDOM from './CardDOM';
 
 const CustomCard = (props) => {
-    // functional part
+    // Functional part here...
+
     return <CardDOM {...props} />;
 };
 

@@ -3,7 +3,6 @@
 import { API_EMPLOYEES } from './apis';
 import { getLocalStorage } from './commonFunc';
 import { CONST_LOCAL_STORAGE_LOGGED_USER } from './constants';
-import useAppendIds from './utilsHooks/useAppendIds';
 
 const APIS = {
     EMPLOYEES: API_EMPLOYEES
@@ -36,25 +35,46 @@ const appendPagination = (params, canAppend = false) => {
 
 const appendIds = (ids, args) => {
     const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER);
-    return ids?.length ? `/${ids.map((id) => (id === 'orgId' ? orgId : args?.[id])).join('/')}` : '';
+    const { getItemId } = args;
+    return ids?.length
+        ? `/${ids.map((id) => (id === 'orgId' ? orgId : args?.[id])).join('/')}`
+        : '';
 };
 
 const formAction = ({ method, apiPropName, loadingParam, args }) => {
     const API_CONFIG = APIS?.[args?.module]?.[apiPropName];
     return {
         method,
-        url: `${API_CONFIG?.api}${appendIds(API_CONFIG?.ids, args)}${appendPagination({ page: args?.page, size: args?.size })}`,
+        url: `${API_CONFIG?.api}${appendIds(API_CONFIG?.ids, args)}${appendPagination({
+            page: args?.page,
+            size: args?.size
+        })}`,
         loadingParam,
         ...(apiPropName === 'getAll' && { stateParam: `${args?.module?.toLowerCase()}Data` }),
         ...(apiPropName === 'get' && { stateParam: `${args?.module?.toLowerCase()}One` }),
-        ...args // module, orgId or someOtherIds, payload, id, page, size, message
+        ...args // module, orgId, getItemId, getItemIdName, or someOtherIds, payload, page, size, message
     };
 };
 
-const formActionGetAll = (args) => formAction({ method: 'GET', apiPropName: 'getAll', loadingParam: 'getAllFetching', args });
-const formActionPost = (args) => formAction({ method: 'POST', apiPropName: 'post', loadingParam: 'posting', args });
-const formActionGet = (args) => formAction({ method: 'GET', apiPropName: 'get', loadingParam: 'getFetching', args });
-const formActionPut = (args) => formAction({ method: 'PUT', apiPropName: 'put', loadingParam: 'putting', args });
-const formActionDelete = (args) => formAction({ method: 'DELETE', apiPropName: 'delete', loadingParam: 'deleting', args });
+const formActionGetAll = (args) => {
+    return formAction({
+        method: 'GET',
+        apiPropName: 'getAll',
+        loadingParam: 'getAllFetching',
+        args
+    });
+};
+const formActionPost = (args) => {
+    return formAction({ method: 'POST', apiPropName: 'post', loadingParam: 'posting', args });
+};
+const formActionGet = (args) => {
+    return formAction({ method: 'GET', apiPropName: 'get', loadingParam: 'getFetching', args });
+};
+const formActionPut = (args) => {
+    return formAction({ method: 'PUT', apiPropName: 'put', loadingParam: 'putting', args });
+};
+const formActionDelete = (args) => {
+    return formAction({ method: 'DELETE', apiPropName: 'delete', loadingParam: 'deleting', args });
+};
 
 export { formActionGetAll, formActionPost, formActionGet, formActionPut, formActionDelete };

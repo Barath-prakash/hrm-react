@@ -1,15 +1,15 @@
-const setContextState = (setState, paramName, value) => {
+const setContextState = ({ setState, paramName, paramValue }) => {
     setState((prevData) => ({
         ...prevData,
-        ...(typeof value === 'object' && !Array.isArray(value)
+        ...(typeof paramValue === 'object' && !Array.isArray(paramValue)
             ? {
                   [paramName]: {
                       ...prevData?.[paramName],
-                      ...value
+                      ...paramValue
                   }
               }
             : {
-                  [paramName]: value
+                  [paramName]: paramValue
               })
     }));
 };

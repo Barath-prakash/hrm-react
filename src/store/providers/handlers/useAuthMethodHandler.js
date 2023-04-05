@@ -3,7 +3,6 @@ import useApiCall from 'store/useApiCall';
 import useAppContext from 'store/useAppContext';
 import { setLocalStorage } from 'utils/commonFunc';
 import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
-// import { setContextState } from './utils';
 
 const useAuthMethodHandler = ({ setState }) => {
     const { authStore: { user: { username = '', password = '' } = {} } = {} } = useAppContext();

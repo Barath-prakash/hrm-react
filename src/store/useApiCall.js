@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 import { setContextState } from './providers/handlers/utils';
+import { getLocalStorage } from 'utils/commonFunc';
+import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
 
 // const BASE_URL = 'http://localhost:5000/api';
 const BASE_URL = 'https://api.scholae.innobs.in/api';
@@ -15,7 +17,12 @@ const formatResponse = (formatData) => {
             };
         });
         return returnObj;
-    } else if (options?.readContent && Array.isArray(data?.content) && Array.isArray(sourceFormat) && returnType === 'array') {
+    } else if (
+        options?.readContent &&
+        Array.isArray(data?.content) &&
+        Array.isArray(sourceFormat) &&
+        returnType === 'array'
+    ) {
         const returnList = data?.map((mainItem) => {
             let returnObj = {};
             sourceFormat?.map((el) => {
@@ -46,25 +53,30 @@ const useApiCall = () => {
             // contextState from handler
             contextState
         } = configData;
-        const { authState: { loggedUser: { userToken = '' } = {} } = {}, setAppError } = contextState;
-        console.log({ userToken });
+        const { userToken: localUserToken } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER);
+        const { authState: { loggedUser: { userToken = '' } = {} } = {}, setAppError } =
+            contextState;
 
+        const token = userToken || localUserToken;
         headers['Accept'] = 'application/json';
         if (['POST', 'PUT'].includes(method)) headers['Content-Type'] = 'application/json';
-        if (userToken) headers['Authorization'] = `Bearer ${userToken}`;
+        if (token) headers['Authorization'] = `Bearer ${token}`;
 
-        loadingParam && setContextState?.(setState, loadingParam, true);
+        loadingParam && setContextState({ setState, paramName: loadingParam, paramValue: true });
         setAppError?.(null);
         try {
             const response = await fetch(`${BASE_URL}${url}`, {
                 method,
                 headers,
-                ...(['POST', 'PUT'].includes(method) && payload && { body: JSON.stringify(payload) })
+                ...(['POST', 'PUT'].includes(method) &&
+                    payload && { body: JSON.stringify(payload) })
             });
             const data = await response?.json();
-            const resData = sourceFormat ? formatResponse({ data, sourceFormat, returnType, options: { readContent } }) : data;
-            stateParam && setContextState?.(setState, stateParam, resData);
-            setContextState?.(setState, loadingParam, false);
+            const resData = sourceFormat
+                ? formatResponse({ data, sourceFormat, returnType, options: { readContent } })
+                : data;
+            stateParam && setContextState({ setState, paramName: stateParam, paramValue: resData });
+            setContextState({ setState, paramName: loadingParam, paramValue: false });
             return resData;
         } catch (error) {
             console.error(`${url} - error: `, error);
@@ -72,7 +84,8 @@ const useApiCall = () => {
                 console.log('Not-authorized');
                 return;
             }
-            loadingParam && setContextState?.(setState, loadingParam, false);
+            loadingParam &&
+                setContextState({ setState, paramName: loadingParam, paramValue: false });
             setAppError?.(error);
         }
     }, []);

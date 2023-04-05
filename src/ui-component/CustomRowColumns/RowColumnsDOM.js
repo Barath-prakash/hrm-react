@@ -5,20 +5,20 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2)
+        padding: theme.spacing(0)
     }
 }));
 
 const RowColumnsDOM = (props) => {
     const classes = useStyles();
-    const { listToLoop, getShowContent, componentName } = props;
+    const { listToLoop, getShowContent, componentName, md, sm = 6, xs = 12 } = props;
 
     return (
         <Box className={classes.root}>
             <Grid container spacing={2}>
-                {listToLoop?.map((item = {}, i) => (
-                    <Grid item xs={12} sm={4} md={3} key={item?.id || i}>
-                        {getShowContent(item, componentName)}
+                {listToLoop?.map((loopItem = {}, i) => (
+                    <Grid item sm={sm} xs={xs} md={loopItem?.md || md} key={i}>
+                        {getShowContent({ loopItem, componentName })}
                     </Grid>
                 ))}
             </Grid>

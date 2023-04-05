@@ -11,6 +11,8 @@ import { store } from 'store';
 
 // style + assets
 import 'assets/scss/style.scss';
+import 'assets/scss/global.scss';
+
 import config from './config';
 import AppProvider from 'store/providers/AppProvider';
 

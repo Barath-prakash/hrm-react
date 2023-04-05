@@ -32,8 +32,8 @@ const AppProvider = ({ children }) => {
         if (!authLocalState?.loggedUser?.userToken) {
             const user = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER);
             if (user?.userId) {
-                setContextState(setAuthState, 'loggedUser', user);
-                setContextState(setAuthState, 'isAuthenticated', true);
+                setContextState({ setState: setAuthState, paramName: 'loggedUser', paramValue: user });
+                setContextState({ setState: setAuthState, paramName: 'isAuthenticated', paramValue: true });
             }
         }
     }, [authLocalState?.loggedUser?.userToken]);

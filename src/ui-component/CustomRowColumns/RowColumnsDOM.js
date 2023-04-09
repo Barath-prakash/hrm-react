@@ -17,7 +17,13 @@ const RowColumnsDOM = (props) => {
         <Box className={classes.root}>
             <Grid container spacing={2}>
                 {listToLoop?.map((loopItem = {}, i) => (
-                    <Grid item sm={sm} xs={xs} md={loopItem?.md || md} key={i}>
+                    <Grid
+                        item
+                        sm={loopItem?.sm || sm}
+                        xs={loopItem?.xs || xs}
+                        md={loopItem?.md || md}
+                        key={i}
+                    >
                         {getShowContent({ loopItem, componentName })}
                     </Grid>
                 ))}

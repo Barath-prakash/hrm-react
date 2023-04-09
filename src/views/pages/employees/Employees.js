@@ -14,6 +14,8 @@ import useAppContext from 'store/useAppContext';
 import CustomPagination from 'ui-component/CustomPagination';
 import CustomRightButton from 'ui-component/CustomRightButton';
 import apiAction from 'utils/apiAction';
+import EmployeeForm from './EmployeeForm';
+import { setContextState } from 'store/providers/handlers/utils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,10 +53,22 @@ const Employees = () => {
         handleApiAction({ action: CONST_GET, getId, getIdName: 'employeeId' });
     };
 
-    console.log({ getAllFetching, getFetching });
+    const handleToggleModal = () => {
+        setContextState({
+            setState: setEmployeesState,
+            paramName: 'employeesModalOpen',
+            paramValue: true
+        });
+    };
+
+    // console.log({ getAllFetching, getFetching });
     return (
         <>
-            <CustomRightButton action={CONST_ACTION_ADD} module={CONST_MODULE_EMPLOYEES} />
+            <CustomRightButton
+                action={CONST_ACTION_ADD}
+                module={CONST_MODULE_EMPLOYEES}
+                handleClick={handleToggleModal}
+            />
             <Box className={classes.root}>
                 <CustomRowColumns
                     listToLoop={employeesData?.content}
@@ -73,6 +87,7 @@ const Employees = () => {
                     size={size}
                     setState={setEmployeesState}
                 />
+                <EmployeeForm />
             </Box>
         </>
     );

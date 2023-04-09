@@ -10,7 +10,10 @@ const employeesState = {
     getFetching: false,
     posting: false,
     putting: false,
-    deleting: false
+    deleting: false,
+    // Form
+    employeesModalOpen: false,
+    formState: {}
 };
 
 export default employeesState;

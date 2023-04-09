@@ -6,9 +6,16 @@ import useAppContext from 'store/useAppContext';
 import { useEffect } from 'react';
 import { setContextState } from 'store/providers/handlers/utils';
 import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
+import CustomSelect from './CustomSelect';
+import CustomRadioGroup from './CustomRadioGroup';
+import CustomDatePicker from './CustomDatePicker';
 
 const formElements = {
-    INPUT: (formData) => <CustomInput {...formData} />
+    INPUT: (formData) => <CustomInput {...formData} />,
+    SELECT: (formData) => <CustomSelect {...formData} />,
+    MULTI_SELECT: (formData) => <CustomSelect isMulti={true} {...formData} />,
+    RADIO_GROUP: (formData) => <CustomRadioGroup {...formData} />,
+    DATE_PICKER: (formData) => <CustomDatePicker {...formData} />
 };
 
 const getElement = (fieldType, formData) => formElements?.[fieldType]?.(formData);

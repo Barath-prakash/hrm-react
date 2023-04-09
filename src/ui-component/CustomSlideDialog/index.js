@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
 import { setContextState } from 'store/providers/handlers/utils';
 import useAppContext from 'store/useAppContext';
+import CustomButton from 'ui-component/CustomButton';
 
 const StyledDialog = styled(Dialog)(({ theme, width }) => ({
     '& .MuiDialog-paper': {
@@ -97,12 +98,8 @@ export default function CustomSlideDialog({ module, width, children, dialogHeade
             <DialogContent>{children}</DialogContent>
             <Divider />
             <DialogActions>
-                <Button onClick={setToggleModal} variant="contained" color="inherit">
-                    Cancel
-                </Button>
-                <Button variant="contained" onClick={setToggleModal} color="primary">
-                    Save
-                </Button>
+                <CustomButton name="Cancel" handleClick={setToggleModal} />
+                <CustomButton name="Save" handleClick={setToggleModal} />
             </DialogActions>
         </StyledDialog>
     );

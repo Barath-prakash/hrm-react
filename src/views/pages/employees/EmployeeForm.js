@@ -4,7 +4,7 @@ import FormBuilder from 'ui-component/forms/FormBuilder';
 import {
     CONST_TYPE_EMAIL,
     CONST_FIELD_DATE_PICKER,
-    CONST_FIELD_RADIO,
+    CONST_FIELD_RADIO_GROUP,
     CONST_FIELD_SELECT,
     CONST_MODULE_EMPLOYEES
 } from 'utils/constants';
@@ -21,8 +21,15 @@ const initialState = {
     gender: {
         fieldLabel: 'Gender',
         fieldName: 'gender',
-        fieldType: CONST_FIELD_RADIO,
-        options: { isReq: true, md: 6 }
+        fieldType: CONST_FIELD_RADIO_GROUP,
+        options: {
+            isReq: true,
+            md: 6,
+            selectOptions: [
+                { label: 'Male', value: 'male' },
+                { label: 'Female', value: 'female' }
+            ]
+        }
     },
     dateOfBirth: {
         fieldLabel: 'DOB',
@@ -54,20 +61,32 @@ const initialState = {
         fieldName: 'status',
         fieldValue: 'ACTIVE',
         fieldType: CONST_FIELD_SELECT,
-        options: { md: 6 }
+        options: {
+            md: 6,
+            selectOptions: [
+                { label: 'One', value: 1 },
+                { label: 'Two', value: 2 }
+            ]
+        }
     },
     motherTongue: {
         fieldLabel: 'Mother Tongue',
         fieldName: 'motherTongue',
         fieldType: CONST_FIELD_SELECT,
-        options: { md: 6 }
+        options: {
+            md: 6,
+            selectOptions: [
+                { label: 'One', value: 1 },
+                { label: 'Two', value: 2 }
+            ]
+        }
     },
     employerOrgId: { fieldName: 'employerOrgId', fieldValue: 0, options: { isNotField: true } }
 };
 
 const EmployeeForm = () => {
     return (
-        <CustomSlideDialog module={CONST_MODULE_EMPLOYEES}>
+        <CustomSlideDialog dialogHeader="Employee" module={CONST_MODULE_EMPLOYEES}>
             <FormBuilder initialState={initialState} module={CONST_MODULE_EMPLOYEES} />
         </CustomSlideDialog>
     );

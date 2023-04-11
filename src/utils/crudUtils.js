@@ -35,9 +35,9 @@ const appendPagination = (params, canAppend = false) => {
 
 const appendIds = (ids, args) => {
     const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER);
-    const { getItemId } = args;
+    const { idName } = args;
     return ids?.length
-        ? `/${ids.map((id) => (id === 'orgId' ? orgId : args?.[id])).join('/')}`
+        ? `/${ids.map((id) => (id === 'orgId' ? orgId : args?.[idName])).join('/')}`
         : '';
 };
 
@@ -52,7 +52,7 @@ const formAction = ({ method, apiPropName, loadingParam, args }) => {
         loadingParam,
         ...(apiPropName === 'getAll' && { stateParam: `${args?.module?.toLowerCase()}Data` }),
         ...(apiPropName === 'get' && { stateParam: `${args?.module?.toLowerCase()}One` }),
-        ...args // module, orgId, getItemId, getItemIdName, or someOtherIds, payload, page, size, message
+        ...args // module, orgId, idName, or someOtherIds, payload, page, size, message
     };
 };
 

@@ -20,7 +20,7 @@ export const LoadingCard = ({ size = 30, color }) => (
     </div>
 );
 
-export default function CustomLoader({ size = 24, style, color }) {
+export default function CustomLoader({ size = 20, style, color }) {
     const classes = useStyles();
 
     return (

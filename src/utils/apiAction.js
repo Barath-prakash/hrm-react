@@ -6,14 +6,17 @@ import { formActionDelete } from './crudUtils';
 const apiAction = ({
     crudMethods,
     setState,
+    // pagination
+    page,
+    size,
+    // passActionInfo
     action,
     module,
     orgId,
+    idName,
     getId,
-    getIdName,
-    page,
-    size,
-    payload
+    payload,
+    delId
 }) => {
     const apiActions = {
         getAll: formActionGetAll({
@@ -21,13 +24,19 @@ const apiAction = ({
             page,
             size
         }),
-        get: formActionGet({ module, orgId, getId, getIdName }),
+        get: formActionGet({ module, orgId, idName, [idName]: getId }),
         post: formActionPost({ module, payload, orgId }),
-        put: formActionPut({ module, payload, orgId }),
-        delete: formActionDelete({ module, orgId })
+        put: formActionPut({
+            module,
+            payload,
+            orgId,
+            idName,
+            [idName]: payload?.[idName]
+        }),
+        delete: formActionDelete({ module, orgId, idName, [idName]: delId })
     };
 
-    crudMethods.crudService({
+    return crudMethods.crudService({
         setState,
         ...apiActions?.[action]
     });

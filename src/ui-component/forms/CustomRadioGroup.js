@@ -4,17 +4,18 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { FormHelperText } from '@mui/material';
 
 export default function CustomRadioGroup({
     module,
     fieldLabel = '',
     fieldValue,
     fieldName,
-    options: { validations = [], validationError = '', selectOptions },
+    options: { isReq, validations = [], validationError = '', selectOptions },
     handleChange
 }) {
     return (
-        <FormControl error={!!validationError}>
+        <FormControl error={!!validationError} required={isReq}>
             <FormLabel id={`${module}_${fieldName}`} style={{ fontSize: 11 }}>
                 {fieldLabel}
             </FormLabel>
@@ -31,9 +32,10 @@ export default function CustomRadioGroup({
                         value={el?.value}
                         control={
                             <Radio
+                                // required={isReq}
                                 sx={{
                                     '& .MuiSvgIcon-root': {
-                                        fontSize: 13
+                                        fontSize: 14
                                     }
                                 }}
                             />
@@ -42,7 +44,7 @@ export default function CustomRadioGroup({
                     />
                 ))}
             </RadioGroup>
-            {!!validationError && <FormHelperText>{helperText}</FormHelperText>}
+            {!!validationError && <FormHelperText>{validationError}</FormHelperText>}
         </FormControl>
     );
 }

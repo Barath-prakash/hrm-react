@@ -3,17 +3,15 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     Slide,
-    Button,
     Divider,
     IconButton,
     Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
+import { CONST_MODULE_EMPLOYEES, CONST_MODULE_EMPLOYEES_MODAL } from 'utils/constants';
 import { setContextState } from 'store/providers/handlers/utils';
 import useAppContext from 'store/useAppContext';
 import CustomButton from 'ui-component/CustomButton';
@@ -47,15 +45,27 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="left" ref={ref} {...props} />;
 });
 
-export default function CustomSlideDialog({ module, width, children, dialogHeader }) {
+export default function CustomSlideDialog({
+    isForm = false,
+    module = '',
+    width = '30%',
+    children = null,
+    dialogHeader = '',
+    handleSubmit
+}) {
     const {
-        employeesState: { employeesModalOpen: empModalOpen },
+        employeesState: {
+            employeesModalOpen: empModalOpen,
+            formState: empFormState,
+            posting: empPosting,
+            putting: empPutting
+        },
         employeesMethods: { setEmployeesState }
     } = useAppContext();
 
     //** Modal */
     const modalParam = {
-        [CONST_MODULE_EMPLOYEES]: 'employeesModalOpen'
+        [CONST_MODULE_EMPLOYEES]: CONST_MODULE_EMPLOYEES_MODAL
     };
 
     //** Add new modules state updater functions here */
@@ -64,19 +74,33 @@ export default function CustomSlideDialog({ module, width, children, dialogHeade
     };
 
     //** Add new modules states here */
-    const moduleState = {
+    const moduleModalState = {
         [CONST_MODULE_EMPLOYEES]: empModalOpen
+    };
+
+    const moduleFormState = {
+        [CONST_MODULE_EMPLOYEES]: empFormState
+    };
+
+    const moduleLoaderState = {
+        [CONST_MODULE_EMPLOYEES]: empPosting || empPutting
     };
 
     const setToggleModal = () => {
         setContextState({
             setState: moduleStateSetter?.[module],
             paramName: modalParam?.[module],
-            paramValue: !moduleState?.[module]
+            paramValue: !moduleModalState?.[module]
         });
     };
 
-    const isModalOpen = moduleState?.[module];
+    const onSubmit = (e) => {
+        e.preventDefault();
+        handleSubmit?.(moduleFormState?.[module]);
+    };
+
+    const isModalOpen = moduleModalState?.[module];
+    const isLoading = moduleLoaderState?.[module];
     return (
         <StyledDialog
             open={isModalOpen}
@@ -95,12 +119,22 @@ export default function CustomSlideDialog({ module, width, children, dialogHeade
                 </IconButton>
             </DialogTitle>
             <Divider />
-            <DialogContent>{children}</DialogContent>
-            <Divider />
-            <DialogActions>
-                <CustomButton name="Cancel" handleClick={setToggleModal} />
-                <CustomButton name="Save" handleClick={setToggleModal} />
-            </DialogActions>
+            {isForm ? (
+                <form onSubmit={onSubmit}>
+                    <DialogContent>{children}</DialogContent>
+                    <Divider />
+                    <DialogActions>
+                        <CustomButton
+                            name="Cancel"
+                            handleClick={setToggleModal}
+                            loading={isLoading}
+                        />
+                        <CustomButton type="submit" name="Save" loading={isLoading} />
+                    </DialogActions>
+                </form>
+            ) : (
+                <DialogContent>{children}</DialogContent>
+            )}
         </StyledDialog>
     );
 }

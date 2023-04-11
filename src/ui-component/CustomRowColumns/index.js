@@ -8,6 +8,7 @@ import { isDomElement } from 'utils/commonFunc';
 
 const CustomRowColumns = (props) => {
     const {
+        isForm,
         listToLoop,
         md = 3,
         parentContentDOM,
@@ -43,7 +44,13 @@ const CustomRowColumns = (props) => {
     };
 
     return (
-        <RowColumnsDOM listToLoop={listToLoop} md={md} getShowContent={getShowContent} {...props} />
+        <RowColumnsDOM
+            isForm={isForm}
+            listToLoop={listToLoop}
+            md={md}
+            getShowContent={getShowContent}
+            {...props}
+        />
     );
 };
 

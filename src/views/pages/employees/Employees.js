@@ -5,9 +5,13 @@ import CustomRowColumns from 'ui-component/CustomRowColumns';
 import {
     COMP_CustomCard,
     CONST_ACTION_ADD,
+    CONST_DELETE,
     CONST_GET,
     CONST_GETALL,
-    CONST_MODULE_EMPLOYEES
+    CONST_MODULE_EMPLOYEES,
+    CONST_MODULE_EMPLOYEES_MODAL,
+    CONST_POST,
+    CONST_PUT
 } from 'utils/constants';
 import useAppContext from 'store/useAppContext';
 // Pagination
@@ -15,7 +19,7 @@ import CustomPagination from 'ui-component/CustomPagination';
 import CustomRightButton from 'ui-component/CustomRightButton';
 import apiAction from 'utils/apiAction';
 import EmployeeForm from './EmployeeForm';
-import { setContextState } from 'store/providers/handlers/utils';
+import useModalUtils from 'utils/modalUtils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const idName = 'employeeId';
 const Employees = () => {
     const classes = useStyles();
     const {
@@ -31,43 +36,58 @@ const Employees = () => {
         employeesMethods: { setEmployeesState },
         employeesState: { employeesData, page, size, getAllFetching, getFetching }
     } = useAppContext();
+    const { handleToggleModal } = useModalUtils();
 
     const handleApiAction = ({ action, payload, orgId, getId, getIdName }) => {
         apiAction({
             crudMethods,
             setState: setEmployeesState,
-            action,
             module: CONST_MODULE_EMPLOYEES,
-            page,
-            size,
+            // pass params
+            action,
             payload,
             orgId,
             getId,
-            getIdName
+            getIdName,
+            // pagination
+            page,
+            size
         });
     };
 
     useEffect(() => handleApiAction({ action: CONST_GETALL }), [page, size]);
 
     const get = (getId) => {
-        handleApiAction({ action: CONST_GET, getId, getIdName: 'employeeId' });
+        handleApiAction({ action: CONST_GET, getId, idName });
     };
 
-    const handleToggleModal = () => {
-        setContextState({
-            setState: setEmployeesState,
-            paramName: 'employeesModalOpen',
-            paramValue: true
+    const postOrPut = (payload) => {
+        return handleApiAction({
+            action: payload?.[idName] ? CONST_PUT : CONST_POST,
+            payload,
+            idName
         });
     };
 
-    // console.log({ getAllFetching, getFetching });
+    const deleteItem = (delId) => {
+        return handleApiAction({
+            action: CONST_DELETE,
+            payload,
+            idName
+        });
+    };
+
     return (
         <>
             <CustomRightButton
                 action={CONST_ACTION_ADD}
                 module={CONST_MODULE_EMPLOYEES}
-                handleClick={handleToggleModal}
+                handleClick={() =>
+                    handleToggleModal({
+                        module: CONST_MODULE_EMPLOYEES,
+                        modalParam: CONST_MODULE_EMPLOYEES_MODAL
+                    })
+                }
             />
             <Box className={classes.root}>
                 <CustomRowColumns
@@ -87,7 +107,7 @@ const Employees = () => {
                     size={size}
                     setState={setEmployeesState}
                 />
-                <EmployeeForm />
+                <EmployeeForm postOrPut={postOrPut} />
             </Box>
         </>
     );

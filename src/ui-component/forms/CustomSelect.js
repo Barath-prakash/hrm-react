@@ -1,6 +1,6 @@
-import { Stack } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import { CONST_INPUT_LABEL_SHRINK, CONST_INPUT_SIZE, CONST_INPUT_VARIANT } from './formUtils';
 
 export default function CustomSelect({
     isMulti = false,
@@ -8,37 +8,36 @@ export default function CustomSelect({
     fieldLabel = '',
     fieldValue,
     fieldName,
-    options: { validations = [], validationError = '', selectOptions },
+    options: { isReq, validations = [], validationError = '', selectOptions },
     handleChange
 }) {
     return (
-        <Stack spacing={3}>
-            <Autocomplete
-                id={`${module}_${fieldValue}`}
-                multiple={isMulti}
-                options={selectOptions}
-                getOptionLabel={(option) => option.label}
-                value={selectOptions?.find((el) => el.value === fieldValue)}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        InputLabelProps={{
-                            shrink: true
-                        }}
-                        variant="standard"
-                        label={fieldLabel}
-                        placeholder={`Select ${fieldLabel}`}
-                        onChange={handleChange}
-                        error={!!validationError}
-                        helperText={validationError || ''}
-                    />
-                )}
-                onChange={(event, newValue) => {
-                    if (newValue?.value !== fieldValue) {
-                        handleChange(fieldName, newValue?.value);
-                    }
-                }}
-            />
-        </Stack>
+        <Autocomplete
+            id={`${module}_${fieldValue}`}
+            multiple={isMulti}
+            options={selectOptions}
+            getOptionLabel={(option) => option.label}
+            value={selectOptions?.find((el) => el.value === fieldValue)}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    InputLabelProps={{
+                        shrink: CONST_INPUT_LABEL_SHRINK
+                    }}
+                    variant={CONST_INPUT_VARIANT}
+                    size={CONST_INPUT_SIZE}
+                    label={fieldLabel}
+                    placeholder={`Select ${fieldLabel}`}
+                    error={!!validationError}
+                    helperText={validationError || ''}
+                    required={isReq}
+                />
+            )}
+            onChange={(event, newValue) => {
+                if (newValue?.value !== fieldValue) {
+                    handleChange(fieldName, newValue?.value);
+                }
+            }}
+        />
     );
 }

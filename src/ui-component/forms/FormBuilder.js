@@ -20,13 +20,12 @@ const formElements = {
 
 const getElement = (fieldType, formData) => formElements?.[fieldType]?.(formData);
 
-let timer;
 const FormBuilder = ({ initialState = {}, module = '' }) => {
     const {
         //** Employee Module */
         employeesState: { formState: empFormState = {} } = {},
         employeesMethods: { setEmployeesState } = {}
-        // Import/Read more module here
+        // Import Or Read more module here
     } = useAppContext();
 
     //** Add new modules state updater functions here */
@@ -64,7 +63,6 @@ const FormBuilder = ({ initialState = {}, module = '' }) => {
         updateModuleState(newState);
     };
 
-    console.log('-----formState-----', formState);
     // UI Form building
     const formStateList = Object.keys(formState).map((el) => {
         const formObj = formObjBuild(formState?.[el] || {});
@@ -78,7 +76,12 @@ const FormBuilder = ({ initialState = {}, module = '' }) => {
         );
     });
 
-    return <CustomRowColumns listToLoop={formStateList.filter((el) => el && el?.element)} />;
+    return (
+        <CustomRowColumns
+            isForm={true}
+            listToLoop={formStateList.filter((el) => el && el?.element)}
+        />
+    );
 };
 
 export default FormBuilder;

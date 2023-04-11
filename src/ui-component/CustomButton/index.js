@@ -25,7 +25,7 @@ const CustomButton = ({
             color={name.toLowerCase() === 'cancel' ? 'inherit' : color}
             style={{ fontWeight: 'bold', ...style }}
             variant={variant}
-            disabled={disabled}
+            disabled={loading || disabled}
             onClick={handleClick}
         >
             {(type === 'submit' || showLoader) && loading ? <CustomLoader /> : ''}{' '}

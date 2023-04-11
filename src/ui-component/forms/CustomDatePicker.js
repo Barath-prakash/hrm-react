@@ -1,10 +1,11 @@
+import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Box, FormLabel, IconButton, TextField } from '@mui/material';
+import { Box, IconButton, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { add, sub } from 'date-fns';
-import 'react-datepicker/dist/react-datepicker.css';
+import { CONST_INPUT_LABEL_SHRINK, CONST_INPUT_SIZE, CONST_INPUT_VARIANT } from './formUtils';
 
 const useStyles = makeStyles({
     iconButton: {
@@ -20,8 +21,6 @@ const CustomDatePicker = ({
     handleChange,
     fieldName,
     fieldValue: passSelectedDate,
-    minDate,
-    maxDate,
     showOnlyMonthAndYear,
     showTimeSelect,
     showDateWithTime,
@@ -32,7 +31,7 @@ const CustomDatePicker = ({
     dateFormat,
     disabled,
     hidePrevNext = true,
-    options: { validationError }
+    options: { isReq, validationError, minDate = null, maxDate = null }
 }) => {
     const isWeekday = (date) => {
         const day = new Date(date).getDay();
@@ -84,9 +83,10 @@ const CustomDatePicker = ({
                     <TextField
                         fullWidth
                         InputLabelProps={{
-                            shrink: true
+                            shrink: CONST_INPUT_LABEL_SHRINK
                         }}
-                        variant="standard"
+                        variant={CONST_INPUT_VARIANT}
+                        size={CONST_INPUT_SIZE}
                         label={fieldLabel}
                         placeholder={`Select ${fieldLabel}`}
                         onChange={handleChange}
@@ -94,6 +94,8 @@ const CustomDatePicker = ({
                         helperText={validationError || ''}
                     />
                 }
+                isClearable
+                // required={isReq}
             />
             {!hidePrevNext && (
                 <div

@@ -9,7 +9,6 @@ const useAuthMethodHandler = ({ setState }) => {
     const api = useApiCall();
 
     const userLoginService = useCallback(async (loginData) => {
-        console.log({ username, password, ...loginData });
         const res = await api({
             method: 'POST',
             payload: { username: loginData?.email, password: loginData?.password },
@@ -27,7 +26,6 @@ const useAuthMethodHandler = ({ setState }) => {
             ],
             returnType: 'object'
         });
-        console.log('res', res);
         setLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER, res);
     });
 

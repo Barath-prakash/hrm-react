@@ -40,7 +40,6 @@ const formatResponse = (formatData) => {
 
 const useApiCall = () => {
     const { getModuleStoreAccess } = useStoreAccessByModule();
-
     const callApi = useCallback(async (configData) => {
         const {
             url = '',
@@ -55,8 +54,12 @@ const useApiCall = () => {
             readContent = false,
             // contextState from handler
             contextState,
+            module,
             ...rest
         } = configData;
+        const getStoreAccess = (accessParam) => {
+            return getModuleStoreAccess({ module, accessParam, callFrom: 'useApiCall' });
+        };
         const { userToken: localUserToken = '' } =
             getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
         const { authState: { loggedUser: { userToken = '' } = {} } = {}, setAppError } =
@@ -70,31 +73,18 @@ const useApiCall = () => {
         loadingParam && setContextState({ setState, paramName: loadingParam, paramValue: true });
         setAppError?.(null);
         try {
-            console.log('inn-beforree', { url, method });
+            console.log('API_INITIATED', { url, method });
             const response = await fetch(`${BASE_URL}${url}`, {
                 method,
                 headers,
                 ...(['POST', 'PUT'].includes(method) &&
                     payload && { body: JSON.stringify(payload) })
             });
-            console.log('inn-after');
+            console.log('API_ENDED', { url, method });
             // Close modal (If the action is performing on modal)
-            console.log('=============', rest, typeof getModuleStoreAccess);
             if (rest?.isActionOnModal) {
-                const paramName = getModuleStoreAccess({
-                    module,
-                    accessParam: 'moduleModalParamName'
-                });
-                const paramValue = getModuleStoreAccess({
-                    module,
-                    accessParam: 'moduleModalParamState'
-                });
-                console.log({ paramName, paramValue });
-                setContextState({
-                    setState,
-                    paramName,
-                    paramValue: !paramValue
-                });
+                const paramName = getStoreAccess('moduleModalParamName');
+                setContextState({ setState, paramName, paramValue: false });
             }
             if (rest?.refetchAll && typeof refetchAll === 'function') {
                 refetchAll?.();
@@ -107,7 +97,7 @@ const useApiCall = () => {
             setContextState({ setState, paramName: loadingParam, paramValue: false });
             return resData;
         } catch (error) {
-            console.error(`${url} - error: `, error);
+            console.error(`Error: ${method}: ${url}: `, error);
             if (error?.status === 401) {
                 console.log('Not-authorized');
                 return;

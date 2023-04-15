@@ -55,7 +55,7 @@ export default function useStoreAccessByModule() {
         }
     };
 
-    const getModuleStoreAccess = ({ module, accessParam, loadingAction }) => {
+    const getModuleStoreAccess = ({ module, accessParam, loadingAction, callFrom = '' }) => {
         const accessStore = {
             moduleSetState: moduleStateSetter?.[module],
             moduleModalParamName: moduleModalParam?.[module],

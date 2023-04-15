@@ -1,4 +1,4 @@
-import { Box, Grid, FormControl, Select, MenuItem, Pagination } from '@mui/material';
+import { Box, FormControl, Select, MenuItem } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { createNumberListByGivenNumAndSize } from 'utils/commonFunc';
 
@@ -34,7 +34,10 @@ const SizeViewComponent = ({ listData, size, handleSizeChange }) => {
                     value={size}
                     onChange={(e) => e.target.value !== size && handleSizeChange?.(e.target.value)}
                 >
-                    {createNumberListByGivenNumAndSize(listData.totalPages, 10).map((num, i) => (
+                    {createNumberListByGivenNumAndSize(
+                        Math.ceil(listData?.totalElements / 10),
+                        10
+                    ).map((num, i) => (
                         <MenuItem key={i} value={num}>
                             {num}
                         </MenuItem>

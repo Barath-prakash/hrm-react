@@ -34,7 +34,7 @@ export default function CustomSelect({
                     placeholder={`Select ${fieldLabel}`}
                     error={!!validationError}
                     helperText={validationError || ''}
-                    required={isReq}
+                    // required={isReq}
                 />
             )}
             onChange={(event, newValue) => {

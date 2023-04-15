@@ -81,14 +81,10 @@ const initialState = {
         fieldName: 'totalExperience',
         options: { isReq: true, md: 6, validationError: '' }
     },
-    designation: { fieldLabel: 'Designation', fieldName: 'designation', options: { md: 6 } },
-    department: { fieldLabel: 'Department', fieldName: 'department', options: { md: 6 } },
-    status: {
-        fieldName: 'status',
-        fieldValue: 'ACTIVE',
-        options: {
-            isNotField: true
-        }
+    department: {
+        fieldLabel: 'Department',
+        fieldName: 'department',
+        options: { isReq: true, md: 6, validationError: '' }
     },
     motherTongue: {
         fieldLabel: 'Mother Tongue',
@@ -96,7 +92,21 @@ const initialState = {
         fieldType: CONST_FIELD_SELECT,
         options: {
             md: 6,
-            selectOptions: languagesForSelect
+            selectOptions: languagesForSelect,
+            isReq: true,
+            validationError: ''
+        }
+    },
+    designation: {
+        fieldLabel: 'Designation',
+        fieldName: 'designation',
+        options: { md: 6, isReq: true, validationError: '' }
+    },
+    status: {
+        fieldName: 'status',
+        fieldValue: 'ACTIVE',
+        options: {
+            isNotField: true
         }
     },
     employerOrgId: {
@@ -106,7 +116,7 @@ const initialState = {
     }
 };
 
-const EmployeeForm = ({ postOrPut, refetchAll }) => {
+const EmployeeForm = ({ postOrPut }) => {
     const { validateForm } = useValidateForm();
 
     const handleSubmit = async (payload) => {
@@ -114,8 +124,6 @@ const EmployeeForm = ({ postOrPut, refetchAll }) => {
         if (!isErrorExist) {
             const postData = formPostData(payload);
             await postOrPut(postData);
-            console.log('Done-Fetch-form');
-            refetchAll?.();
         }
     };
 

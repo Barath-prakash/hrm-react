@@ -4,8 +4,12 @@ import ReactDatePicker from 'react-datepicker';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Box, IconButton, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { add, sub } from 'date-fns';
-import { CONST_INPUT_LABEL_SHRINK, CONST_INPUT_SIZE, CONST_INPUT_VARIANT } from './formUtils';
+import { add, parseISO, sub } from 'date-fns';
+import {
+    CONST_INPUT_LABEL_SHRINK,
+    CONST_INPUT_SIZE,
+    CONST_INPUT_VARIANT
+} from 'utils/formUtils/commonUtils';
 
 const useStyles = makeStyles({
     iconButton: {
@@ -31,7 +35,7 @@ const CustomDatePicker = ({
     dateFormat,
     disabled,
     hidePrevNext = true,
-    options: { isReq, validationError, minDate = null, maxDate = null }
+    options: { isReq, validationError, minDate = null, maxDate = null, convertToTimestamp = false }
 }) => {
     const isWeekday = (date) => {
         const day = new Date(date).getDay();
@@ -62,7 +66,7 @@ const CustomDatePicker = ({
                 //className={`form-control ${className}`}
                 selected={selectedDate}
                 onChange={(value) => {
-                    handleChange(fieldName, value);
+                    handleChange(fieldName, convertToTimestamp ? value?.getTime() : value);
                 }}
                 minDate={minDate || null}
                 maxDate={maxDate || null}

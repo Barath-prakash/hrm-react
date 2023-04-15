@@ -2,8 +2,8 @@ import useAppContext from 'store/useAppContext';
 import {
     CONST_MODULE_EMPLOYEES
     //CONST_MODULE_EMPLOYEES_MODAL
-} from './constants';
-import { setContextState } from 'store/providers/handlers/utils';
+} from '../constants';
+import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 
 const useModalUtils = () => {
     const {

@@ -1,14 +1,14 @@
 import React from 'react';
-import { formObjBuild } from 'utils/formBuilderUtils';
-import CustomInput from './CustomInput';
+import { formObjBuild } from 'utils/formUtils/formBuilderUtils';
+import CustomInput from '../../ui-component/forms/CustomInput';
 import CustomRowColumns from 'ui-component/CustomRowColumns';
 import useAppContext from 'store/useAppContext';
 import { useEffect } from 'react';
-import { setContextState } from 'store/providers/handlers/utils';
+import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
-import CustomSelect from './CustomSelect';
-import CustomRadioGroup from './CustomRadioGroup';
-import CustomDatePicker from './CustomDatePicker';
+import CustomSelect from '../../ui-component/forms/CustomSelect';
+import CustomRadioGroup from '../../ui-component/forms/CustomRadioGroup';
+import CustomDatePicker from '../../ui-component/forms/CustomDatePicker';
 
 const formElements = {
     INPUT: (formData) => <CustomInput {...formData} />,

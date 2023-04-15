@@ -51,8 +51,6 @@ const FirebaseLogin = ({ ...others }) => {
         authState: { isLoginLoading = false, loggedUser = {} } = {}
     } = useAppContext();
 
-    console.log('loggedUser', loggedUser);
-
     const googleHandler = async () => {
         console.error('Login');
     };

@@ -1,4 +1,4 @@
-import { setContextState } from 'store/providers/handlers/utils';
+import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 import PaginationDOM from './PaginationDOM';
 
 const CustomPagination = ({ listData, page, size, setState }) => {

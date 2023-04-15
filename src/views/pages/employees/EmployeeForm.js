@@ -1,16 +1,20 @@
 import React from 'react';
 import CustomSlideDialog from 'ui-component/CustomSlideDialog';
-import FormBuilder from 'ui-component/forms/FormBuilder';
-import { formPostData } from 'ui-component/forms/formUtils';
-import useValidateForm from 'ui-component/forms/useValidateForm';
+import FormBuilder from 'utils/formUtils/FormBuilder';
+import { formPostData } from 'utils/formUtils/commonUtils';
+import useValidateForm from 'utils/formUtils/useValidateForm';
+import { getLocalStorage } from 'utils/commonFunc';
 import {
     CONST_TYPE_EMAIL,
     CONST_FIELD_DATE_PICKER,
     CONST_FIELD_RADIO_GROUP,
     CONST_FIELD_SELECT,
-    CONST_MODULE_EMPLOYEES
+    CONST_MODULE_EMPLOYEES,
+    CONST_LOCAL_STORAGE_LOGGED_USER
 } from 'utils/constants';
+import { languagesForSelect } from 'utils/variables';
 
+const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
 const initialState = {
     employeeId: { fieldName: 'employeeId', fieldValue: 0, options: { isNotField: true } },
     name: {
@@ -32,8 +36,8 @@ const initialState = {
             isReq: true,
             md: 6,
             selectOptions: [
-                { label: 'Male', value: 'male' },
-                { label: 'Female', value: 'female' }
+                { label: 'Male', value: 'MALE' },
+                { label: 'Female', value: 'FEMALE' }
             ],
             validationError: ''
         }
@@ -42,7 +46,13 @@ const initialState = {
         fieldLabel: 'DOB',
         fieldName: 'dateOfBirth',
         fieldType: CONST_FIELD_DATE_PICKER,
-        options: { isReq: true, md: 6, maxDate: new Date(), validationError: '' }
+        options: {
+            isReq: true,
+            md: 6,
+            maxDate: new Date(),
+            validationError: '',
+            convertToTimestamp: true
+        }
     },
     qualification: {
         fieldLabel: 'Qualification',
@@ -58,7 +68,13 @@ const initialState = {
         fieldLabel: 'Joining Date',
         fieldName: 'joiningDateTime',
         fieldType: CONST_FIELD_DATE_PICKER,
-        options: { isReq: true, md: 6, maxDate: new Date(), validationError: '' }
+        options: {
+            isReq: true,
+            md: 6,
+            maxDate: new Date(),
+            validationError: '',
+            convertToTimestamp: true
+        }
     },
     totalExperience: {
         fieldLabel: 'Total Experience',
@@ -68,16 +84,10 @@ const initialState = {
     designation: { fieldLabel: 'Designation', fieldName: 'designation', options: { md: 6 } },
     department: { fieldLabel: 'Department', fieldName: 'department', options: { md: 6 } },
     status: {
-        fieldLabel: 'Status',
         fieldName: 'status',
         fieldValue: 'ACTIVE',
-        fieldType: CONST_FIELD_SELECT,
         options: {
-            md: 6,
-            selectOptions: [
-                { label: 'One', value: 1 },
-                { label: 'Two', value: 2 }
-            ]
+            isNotField: true
         }
     },
     motherTongue: {
@@ -86,24 +96,26 @@ const initialState = {
         fieldType: CONST_FIELD_SELECT,
         options: {
             md: 6,
-            selectOptions: [
-                { label: 'One', value: 1 },
-                { label: 'Two', value: 2 }
-            ]
+            selectOptions: languagesForSelect
         }
     },
-    employerOrgId: { fieldName: 'employerOrgId', fieldValue: 0, options: { isNotField: true } }
+    employerOrgId: {
+        fieldName: 'employerOrgId',
+        fieldValue: orgId || 0,
+        options: { isNotField: true }
+    }
 };
 
-const EmployeeForm = ({ postOrPut }) => {
+const EmployeeForm = ({ postOrPut, refetchAll }) => {
     const { validateForm } = useValidateForm();
 
-    const handleSubmit = (payload) => {
+    const handleSubmit = async (payload) => {
         const isErrorExist = validateForm(CONST_MODULE_EMPLOYEES, payload);
         if (!isErrorExist) {
             const postData = formPostData(payload);
-            console.log('postData', postData);
-            // postOrPut(postData);
+            await postOrPut(postData);
+            console.log('Done-Fetch-form');
+            refetchAll?.();
         }
     };
 

@@ -13,8 +13,10 @@ const useCrudMethodHandler = ({ contextState }) => {
                 loadingParam,
                 stateParam,
                 payload,
-                setState // setState from component. Eg: employees -> setEmployeesState
+                setState, // setState from component. Eg: employees -> setEmployeesState
+                ...rest
             } = postData;
+            console.log('rest-incrud-', rest);
             await api({
                 method,
                 url,
@@ -23,7 +25,8 @@ const useCrudMethodHandler = ({ contextState }) => {
                 stateParam,
                 setState,
                 // contextState from handler
-                contextState
+                contextState,
+                ...rest
             });
         },
         [api, contextState]

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Dialog,
     DialogActions,
@@ -11,10 +11,10 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-import { CONST_MODULE_EMPLOYEES, CONST_MODULE_EMPLOYEES_MODAL } from 'utils/constants';
-import { setContextState } from 'store/providers/handlers/utils';
-import useAppContext from 'store/useAppContext';
+import { CONST_MODULE_EMPLOYEES, CONST_POST, CONST_PUT } from 'utils/constants';
+import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 import CustomButton from 'ui-component/CustomButton';
+import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
 
 const StyledDialog = styled(Dialog)(({ theme, width }) => ({
     '& .MuiDialog-paper': {
@@ -53,54 +53,35 @@ export default function CustomSlideDialog({
     dialogHeader = '',
     handleSubmit
 }) {
-    const {
-        employeesState: {
-            employeesModalOpen: empModalOpen,
-            formState: empFormState,
-            posting: empPosting,
-            putting: empPutting
-        },
-        employeesMethods: { setEmployeesState }
-    } = useAppContext();
+    const { getModuleStoreAccess } = useStoreAccessByModule();
 
-    //** Modal */
-    const modalParam = {
-        [CONST_MODULE_EMPLOYEES]: CONST_MODULE_EMPLOYEES_MODAL
+    const moduleName = {
+        [CONST_MODULE_EMPLOYEES]: CONST_MODULE_EMPLOYEES
     };
 
-    //** Add new modules state updater functions here */
-    const moduleStateSetter = {
-        [CONST_MODULE_EMPLOYEES]: setEmployeesState
-    };
-
-    //** Add new modules states here */
-    const moduleModalState = {
-        [CONST_MODULE_EMPLOYEES]: empModalOpen
-    };
-
-    const moduleFormState = {
-        [CONST_MODULE_EMPLOYEES]: empFormState
-    };
-
-    const moduleLoaderState = {
-        [CONST_MODULE_EMPLOYEES]: empPosting || empPutting
+    const getModuleStore = (accessParam, loadingAction) => {
+        return getModuleStoreAccess({
+            module: moduleName?.[CONST_MODULE_EMPLOYEES],
+            accessParam,
+            ...(loadingAction && { loadingAction })
+        });
     };
 
     const setToggleModal = () => {
         setContextState({
-            setState: moduleStateSetter?.[module],
-            paramName: modalParam?.[module],
-            paramValue: !moduleModalState?.[module]
+            setState: getModuleStore('moduleSetState'),
+            paramName: getModuleStore('moduleModalParamName'),
+            paramValue: !getModuleStore('moduleModalParamState')
         });
     };
 
     const onSubmit = (e) => {
         e.preventDefault();
-        handleSubmit?.(moduleFormState?.[module]);
+        handleSubmit?.(getModuleStore('moduleFormState'));
     };
 
-    const isModalOpen = moduleModalState?.[module];
-    const isLoading = moduleLoaderState?.[module];
+    const isModalOpen = getModuleStore('moduleModalParamState');
+    const isLoading = getModuleStore('moduleLoadingState', [CONST_POST, CONST_PUT]);
     return (
         <StyledDialog
             open={isModalOpen}

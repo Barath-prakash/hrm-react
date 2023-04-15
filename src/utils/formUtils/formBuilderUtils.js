@@ -1,4 +1,4 @@
-import { CONST_TYPE_TEXT, CONST_FIELD_INPUT } from './constants';
+import { CONST_TYPE_TEXT, CONST_FIELD_INPUT } from '../constants';
 
 const formOptions = {
     md: 12,

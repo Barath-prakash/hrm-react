@@ -16,7 +16,8 @@ const apiAction = ({
     idName,
     getId,
     payload,
-    delId
+    delId,
+    ...rest
 }) => {
     const apiActions = {
         getAll: formActionGetAll({
@@ -25,7 +26,7 @@ const apiAction = ({
             size
         }),
         get: formActionGet({ module, orgId, idName, [idName]: getId }),
-        post: formActionPost({ module, payload, orgId }),
+        post: formActionPost({ module, payload, orgId, ...rest }),
         put: formActionPut({
             module,
             payload,
@@ -38,7 +39,8 @@ const apiAction = ({
 
     return crudMethods.crudService({
         setState,
-        ...apiActions?.[action]
+        ...apiActions?.[action],
+        ...rest
     });
 };
 

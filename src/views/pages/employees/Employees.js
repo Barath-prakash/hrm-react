@@ -17,9 +17,9 @@ import useAppContext from 'store/useAppContext';
 // Pagination
 import CustomPagination from 'ui-component/CustomPagination';
 import CustomRightButton from 'ui-component/CustomRightButton';
-import apiAction from 'utils/apiAction';
+import apiAction from 'utils/apiUtils/apiAction';
 import EmployeeForm from './EmployeeForm';
-import useModalUtils from 'utils/modalUtils';
+import useModalUtils from 'utils/componentUtils/modalUtils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,7 +38,7 @@ const Employees = () => {
     } = useAppContext();
     const { handleToggleModal } = useModalUtils();
 
-    const handleApiAction = ({ action, payload, orgId, getId, getIdName }) => {
+    const handleApiAction = ({ action, payload, orgId, getId, getIdName, ...rest }) => {
         apiAction({
             crudMethods,
             setState: setEmployeesState,
@@ -51,11 +51,14 @@ const Employees = () => {
             getIdName,
             // pagination
             page,
-            size
+            size,
+            ...rest
         });
     };
 
     useEffect(() => handleApiAction({ action: CONST_GETALL }), [page, size]);
+
+    const refetchAll = () => handleApiAction({ action: CONST_GETALL });
 
     const get = (getId) => {
         handleApiAction({ action: CONST_GET, getId, idName });
@@ -65,7 +68,9 @@ const Employees = () => {
         return handleApiAction({
             action: payload?.[idName] ? CONST_PUT : CONST_POST,
             payload,
-            idName
+            idName,
+            isActionOnModal: true,
+            refetchAll
         });
     };
 
@@ -107,7 +112,7 @@ const Employees = () => {
                     size={size}
                     setState={setEmployeesState}
                 />
-                <EmployeeForm postOrPut={postOrPut} />
+                <EmployeeForm postOrPut={postOrPut} refetchAll={refetchAll} />
             </Box>
         </>
     );

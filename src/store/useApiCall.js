@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
-import { setContextState } from './providers/handlers/utils';
+import { setContextState } from '../utils/contextStoreUtils/setContextUtils';
 import { getLocalStorage } from 'utils/commonFunc';
 import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
+import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
 
 // const BASE_URL = 'http://localhost:5000/api';
 const BASE_URL = 'https://api.scholae.innobs.in/api';
@@ -38,6 +39,8 @@ const formatResponse = (formatData) => {
 };
 
 const useApiCall = () => {
+    const { getModuleStoreAccess } = useStoreAccessByModule();
+
     const callApi = useCallback(async (configData) => {
         const {
             url = '',
@@ -51,11 +54,13 @@ const useApiCall = () => {
             returnType,
             readContent = false,
             // contextState from handler
-            contextState
+            contextState,
+            ...rest
         } = configData;
-        const { userToken: localUserToken } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER);
+        const { userToken: localUserToken = '' } =
+            getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
         const { authState: { loggedUser: { userToken = '' } = {} } = {}, setAppError } =
-            contextState;
+            contextState || {};
 
         const token = userToken || localUserToken;
         headers['Accept'] = 'application/json';
@@ -65,12 +70,35 @@ const useApiCall = () => {
         loadingParam && setContextState({ setState, paramName: loadingParam, paramValue: true });
         setAppError?.(null);
         try {
+            console.log('inn-beforree', { url, method });
             const response = await fetch(`${BASE_URL}${url}`, {
                 method,
                 headers,
                 ...(['POST', 'PUT'].includes(method) &&
                     payload && { body: JSON.stringify(payload) })
             });
+            console.log('inn-after');
+            // Close modal (If the action is performing on modal)
+            console.log('=============', rest, typeof getModuleStoreAccess);
+            if (rest?.isActionOnModal) {
+                const paramName = getModuleStoreAccess({
+                    module,
+                    accessParam: 'moduleModalParamName'
+                });
+                const paramValue = getModuleStoreAccess({
+                    module,
+                    accessParam: 'moduleModalParamState'
+                });
+                console.log({ paramName, paramValue });
+                setContextState({
+                    setState,
+                    paramName,
+                    paramValue: !paramValue
+                });
+            }
+            if (rest?.refetchAll && typeof refetchAll === 'function') {
+                refetchAll?.();
+            }
             const data = await response?.json();
             const resData = sourceFormat
                 ? formatResponse({ data, sourceFormat, returnType, options: { readContent } })

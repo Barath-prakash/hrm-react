@@ -1,8 +1,8 @@
 // APIS SOURCE
 
 import { API_EMPLOYEES } from './apis';
-import { getLocalStorage } from './commonFunc';
-import { CONST_LOCAL_STORAGE_LOGGED_USER } from './constants';
+import { getLocalStorage } from '../commonFunc';
+import { CONST_LOCAL_STORAGE_LOGGED_USER } from '../constants';
 
 const APIS = {
     EMPLOYEES: API_EMPLOYEES
@@ -34,10 +34,10 @@ const appendPagination = (params, canAppend = false) => {
 };
 
 const appendIds = (ids, args) => {
-    const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER);
+    const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
     const { idName } = args;
     return ids?.length
-        ? `/${ids.map((id) => (id === 'orgId' ? orgId : args?.[idName])).join('/')}`
+        ? `/${ids.map((id) => (id === 'orgId' && orgId ? orgId : args?.[idName])).join('/')}`
         : '';
 };
 
@@ -64,6 +64,7 @@ const formActionGetAll = (args) => {
         args
     });
 };
+
 const formActionPost = (args) => {
     return formAction({ method: 'POST', apiPropName: 'post', loadingParam: 'posting', args });
 };

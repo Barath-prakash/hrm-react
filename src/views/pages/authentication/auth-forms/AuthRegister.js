@@ -30,7 +30,7 @@ import { Formik } from 'formik';
 import useScriptRef from 'hooks/useScriptRef';
 import Google from 'assets/images/icons/social-google.svg';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import { strengthColor, strengthIndicator } from 'utils/formUtils/password-strength';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
@@ -88,7 +88,13 @@ const FirebaseRegister = ({ ...others }) => {
                             }}
                         >
                             <Box sx={{ mr: { xs: 1, sm: 2, width: 20 } }}>
-                                <img src={Google} alt="google" width={16} height={16} style={{ marginRight: matchDownSM ? 8 : 16 }} />
+                                <img
+                                    src={Google}
+                                    alt="google"
+                                    width={16}
+                                    height={16}
+                                    style={{ marginRight: matchDownSM ? 8 : 16 }}
+                                />
                             </Box>
                             Sign up with Google
                         </Button>
@@ -131,7 +137,10 @@ const FirebaseRegister = ({ ...others }) => {
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
-                    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+                    email: Yup.string()
+                        .email('Must be a valid email')
+                        .max(255)
+                        .required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
@@ -150,7 +159,15 @@ const FirebaseRegister = ({ ...others }) => {
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                {({
+                    errors,
+                    handleBlur,
+                    handleChange,
+                    handleSubmit,
+                    isSubmitting,
+                    touched,
+                    values
+                }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
                         <Grid container spacing={matchDownSM ? 0 : 2}>
                             <Grid item xs={12} sm={6}>
@@ -176,8 +193,14 @@ const FirebaseRegister = ({ ...others }) => {
                                 />
                             </Grid>
                         </Grid>
-                        <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                            <InputLabel htmlFor="outlined-adornment-email-register">Email Address / Username</InputLabel>
+                        <FormControl
+                            fullWidth
+                            error={Boolean(touched.email && errors.email)}
+                            sx={{ ...theme.typography.customInput }}
+                        >
+                            <InputLabel htmlFor="outlined-adornment-email-register">
+                                Email Address / Username
+                            </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-register"
                                 type="email"
@@ -199,7 +222,9 @@ const FirebaseRegister = ({ ...others }) => {
                             error={Boolean(touched.password && errors.password)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-password-register">Password</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-password-register">
+                                Password
+                            </InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password-register"
                                 type={showPassword ? 'text' : 'password'}
@@ -227,7 +252,10 @@ const FirebaseRegister = ({ ...others }) => {
                                 inputProps={{}}
                             />
                             {touched.password && errors.password && (
-                                <FormHelperText error id="standard-weight-helper-text-password-register">
+                                <FormHelperText
+                                    error
+                                    id="standard-weight-helper-text-password-register"
+                                >
                                     {errors.password}
                                 </FormHelperText>
                             )}

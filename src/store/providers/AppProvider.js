@@ -5,7 +5,7 @@ import employeesState from './states/employeesState';
 import useAuthMethodHandler from './handlers/useAuthMethodHandler';
 import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
 import { getLocalStorage } from 'utils/commonFunc';
-import { setContextState } from './handlers/utils';
+import { setContextState } from '../../utils/contextStoreUtils/setContextUtils';
 import useCrudMethodHandler from './handlers/useCrudMethodHandler';
 
 // Define a context

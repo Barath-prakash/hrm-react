@@ -1,6 +1,10 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import { CONST_INPUT_LABEL_SHRINK, CONST_INPUT_SIZE, CONST_INPUT_VARIANT } from './formUtils';
+import {
+    CONST_INPUT_LABEL_SHRINK,
+    CONST_INPUT_SIZE,
+    CONST_INPUT_VARIANT
+} from 'utils/formUtils/commonUtils';
 
 const CustomInput = ({
     module,

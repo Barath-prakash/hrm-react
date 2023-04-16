@@ -21,7 +21,8 @@ export default function CustomSelect({
             multiple={isMulti}
             options={selectOptions}
             getOptionLabel={(option) => option.label}
-            value={selectOptions?.find((el) => el.value === fieldValue)}
+            value={selectOptions?.find((el) => el?.value === fieldValue)}
+            va
             renderInput={(params) => (
                 <TextField
                     {...params}

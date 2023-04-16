@@ -22,8 +22,13 @@ const CONST_FIELD_CHECKBOX = 'CHECKBOX';
 const CONST_FIELD_SELECT = 'SELECT';
 const CONST_FIELD_MULTI_SELECT = 'MULTI_SELECT';
 
-// Modal open/close params
+// Dialog open/close params
 const CONST_MODULE_EMPLOYEES_MODAL = 'employeesModalOpen';
+const CONST_APP_CONFIRM_MODAL = 'isConfirmModalOpen';
+const CONST_APP_CONFIRM_MODAL_HANDLE = 'handleAppConfirmModal';
+
+// Menus
+const CONST_APP_MENU = 'isMoreMenuOpen';
 
 // components
 const COMP_CustomCard = 'CustomCard';
@@ -52,5 +57,9 @@ export {
     CONST_FIELD_SELECT,
     CONST_FIELD_MULTI_SELECT,
     // Modals
-    CONST_MODULE_EMPLOYEES_MODAL
+    CONST_MODULE_EMPLOYEES_MODAL,
+    CONST_APP_CONFIRM_MODAL,
+    CONST_APP_CONFIRM_MODAL_HANDLE,
+    // Menu
+    CONST_APP_MENU
 };

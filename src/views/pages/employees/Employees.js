@@ -1,25 +1,27 @@
 import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import CustomRowColumns from 'ui-component/CustomRowColumns';
+import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import {
     COMP_CustomCard,
     CONST_ACTION_ADD,
+    CONST_APP_MENU,
     CONST_DELETE,
     CONST_GET,
     CONST_GETALL,
     CONST_MODULE_EMPLOYEES,
-    CONST_MODULE_EMPLOYEES_MODAL,
     CONST_POST,
     CONST_PUT
 } from 'utils/constants';
 import useAppContext from 'store/useAppContext';
 // Pagination
-import CustomPagination from 'ui-component/CustomPagination';
+import CustomPagination from 'ui-component/CustomPagination/CustomPagination';
 import CustomRightButton from 'ui-component/CustomRightButton';
 import apiAction from 'utils/apiUtils/apiAction';
 import EmployeeForm from './EmployeeForm';
 import useModalUtils from 'utils/componentUtils/modalUtils';
+import EmployeeCardContent from './EmployeeCard';
+import CustomCard from 'ui-component/CustomCard/CustomCard';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,11 +36,26 @@ const Employees = () => {
     const {
         crudMethods,
         employeesMethods: { setEmployeesState },
-        employeesState: { employeesData, page, size, getAllFetching, getFetching }
+        employeesState: { employeesData, page, size, getFetching, employeesOne, deleting }
     } = useAppContext();
     const { handleToggleModal } = useModalUtils();
 
-    const handleApiAction = ({ action, payload, orgId, getId, getIdName, ...rest }) => {
+    const toggleModal = () => {
+        handleToggleModal({
+            module: CONST_MODULE_EMPLOYEES
+        });
+    };
+
+    const handleApiAction = ({
+        action,
+        payload,
+        orgId,
+        getId,
+        getIdName,
+        delId,
+        refetchAll,
+        ...rest
+    }) => {
         apiAction({
             crudMethods,
             setState: setEmployeesState,
@@ -52,6 +69,8 @@ const Employees = () => {
             // pagination
             page,
             size,
+            delId,
+            refetchAll,
             ...rest
         });
     };
@@ -61,7 +80,12 @@ const Employees = () => {
     const refetchAll = () => handleApiAction({ action: CONST_GETALL });
 
     const get = (getId) => {
-        handleApiAction({ action: CONST_GET, getId, idName });
+        handleApiAction({
+            action: CONST_GET,
+            getId,
+            idName,
+            toggleModal
+        });
     };
 
     const postOrPut = (payload) => {
@@ -69,7 +93,7 @@ const Employees = () => {
             action: payload?.[idName] ? CONST_PUT : CONST_POST,
             payload,
             idName,
-            isActionOnModal: true,
+            toggleModal,
             refetchAll
         });
     };
@@ -77,8 +101,9 @@ const Employees = () => {
     const deleteItem = (delId) => {
         return handleApiAction({
             action: CONST_DELETE,
-            payload,
-            idName
+            idName,
+            delId,
+            refetchAll
         });
     };
 
@@ -87,16 +112,25 @@ const Employees = () => {
             <CustomRightButton
                 action={CONST_ACTION_ADD}
                 module={CONST_MODULE_EMPLOYEES}
-                handleClick={() =>
-                    handleToggleModal({
-                        module: CONST_MODULE_EMPLOYEES,
-                        modalParam: CONST_MODULE_EMPLOYEES_MODAL
-                    })
-                }
+                handleClick={() => {
+                    toggleModal();
+                }}
             />
             <Box className={classes.root}>
                 <CustomRowColumns
-                    listToLoop={employeesData?.content}
+                    listToLoop={employeesData?.content?.map((item, k) => (
+                        <CustomCard>
+                            <EmployeeCardContent
+                                key={k}
+                                itemInfo={item}
+                                idName="employeeId"
+                                getItem={get}
+                                deleteItem={deleteItem}
+                                getFetching={getFetching}
+                                deleting={deleting}
+                            />
+                        </CustomCard>
+                    ))}
                     componentName={COMP_CustomCard}
                     componentProps={{
                         showStatus: true,
@@ -112,7 +146,7 @@ const Employees = () => {
                     size={size}
                     setState={setEmployeesState}
                 />
-                <EmployeeForm postOrPut={postOrPut} />
+                <EmployeeForm postOrPut={postOrPut} employeesOne={employeesOne} />
             </Box>
         </>
     );

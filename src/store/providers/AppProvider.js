@@ -7,6 +7,7 @@ import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
 import { getLocalStorage } from 'utils/commonFunc';
 import { setContextState } from '../../utils/contextStoreUtils/setContextUtils';
 import useCrudMethodHandler from './handlers/useCrudMethodHandler';
+import appState from './states/appState';
 
 // Define a context
 export const AppContext = createContext({
@@ -23,6 +24,7 @@ const AppProvider = ({ children }) => {
     const [appError, setAppError] = useState('');
     const [authLocalState, setAuthState] = useState(authState);
     const [employeesLocalState, setEmployeesState] = useState(employeesState);
+    const [appLocalState, setAppState] = useState(appState);
     const contextState = {
         authState: authLocalState
     };
@@ -55,6 +57,8 @@ const AppProvider = ({ children }) => {
         //** App */
         appError,
         setAppError,
+        appState: appLocalState,
+        appMethods: { setAppState },
         //** Auth */
         authState: authLocalState,
         authMethods,

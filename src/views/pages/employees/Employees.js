@@ -112,7 +112,7 @@ const Employees = () => {
                     size={size}
                     setState={setEmployeesState}
                 />
-                <EmployeeForm postOrPut={postOrPut} refetchAll={refetchAll} />
+                <EmployeeForm postOrPut={postOrPut} />
             </Box>
         </>
     );

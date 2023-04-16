@@ -8,6 +8,7 @@ const CustomPagination = ({ listData, page, size, setState }) => {
     };
 
     const handleSizeChange = (size) => {
+        setContextState({ setState, paramName: 'page', paramValue: 1 });
         setContextState({ setState, paramName: 'size', paramValue: size });
     };
 

@@ -16,7 +16,6 @@ const useCrudMethodHandler = ({ contextState }) => {
                 setState, // setState from component. Eg: employees -> setEmployeesState
                 ...rest
             } = postData;
-            console.log('rest-incrud-', rest);
             await api({
                 method,
                 url,

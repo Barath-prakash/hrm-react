@@ -37,4 +37,12 @@ function createNumberListByGivenNumAndSize(num, size) {
     return Array.from({ length: num }, (_, i) => (i + 1) * size);
 }
 
-export { makeFirstCaps, capitalize, setLocalStorage, getLocalStorage, dateFormat, isDomElement, createNumberListByGivenNumAndSize };
+export {
+    makeFirstCaps,
+    capitalize,
+    setLocalStorage,
+    getLocalStorage,
+    dateFormat,
+    isDomElement,
+    createNumberListByGivenNumAndSize
+};

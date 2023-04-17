@@ -51,6 +51,7 @@
                 "useTabs": false,
                 "endOfLine": "auto"
             }
-        ]
+        ],
+        "jsx-a11y/no-autofocus": ["error", { "ignoreNonDOM": true }]
     }
 }

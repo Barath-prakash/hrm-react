@@ -1,7 +1,7 @@
 import React from 'react';
 import { formObjBuild } from 'utils/formUtils/formBuilderUtils';
 import CustomInput from '../../ui-component/forms/CustomInput';
-import CustomRowColumns from 'ui-component/CustomRowColumns';
+import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import useAppContext from 'store/useAppContext';
 import { useEffect } from 'react';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
@@ -64,8 +64,8 @@ const FormBuilder = ({ initialState = {}, module = '' }) => {
     };
 
     // UI Form building
-    const formStateList = Object.keys(formState).map((el) => {
-        const formObj = formObjBuild(formState?.[el] || {});
+    const formStateList = Object.values(formState).map((el) => {
+        const formObj = formObjBuild(el || {});
         return (
             formObj?.fieldType && {
                 element: getElement(formObj?.fieldType, { ...formObj, module, handleChange }),

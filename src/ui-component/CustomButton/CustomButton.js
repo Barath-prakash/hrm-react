@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import CustomLoader from '../CustomLoader';
+import CustomLoader from '../CustomLoader/CustomLoader';
 
 const CustomButton = ({
     size = 'medium',
@@ -14,7 +14,8 @@ const CustomButton = ({
     name = 'Save',
     className = '',
     fullWidth = false,
-    showLoader = false
+    showLoader = false,
+    colorSame = false
 }) => {
     return (
         <Button
@@ -22,7 +23,7 @@ const CustomButton = ({
             size={size}
             className={className}
             type={type}
-            color={name.toLowerCase() === 'cancel' ? 'inherit' : color}
+            color={colorSame ? color : name.toLowerCase() === 'cancel' ? 'inherit' : color}
             style={{ fontWeight: 'bold', ...style }}
             variant={variant}
             disabled={loading || disabled}

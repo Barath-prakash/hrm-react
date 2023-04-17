@@ -13,7 +13,7 @@ import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import { CONST_MODULE_EMPLOYEES, CONST_POST, CONST_PUT } from 'utils/constants';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import CustomButton from 'ui-component/CustomButton';
+import CustomButton from 'ui-component/CustomButton/CustomButton';
 import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
 
 const StyledDialog = styled(Dialog)(({ theme, width }) => ({
@@ -46,8 +46,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function CustomSlideDialog({
-    isForm = false,
     module = '',
+    isForm = false,
     width = '30%',
     children = null,
     dialogHeader = '',
@@ -61,7 +61,7 @@ export default function CustomSlideDialog({
 
     const getModuleStore = (accessParam, loadingAction) => {
         return getModuleStoreAccess({
-            module: moduleName?.[CONST_MODULE_EMPLOYEES],
+            module: moduleName?.[module],
             accessParam,
             ...(loadingAction && { loadingAction })
         });
@@ -82,6 +82,7 @@ export default function CustomSlideDialog({
 
     const isModalOpen = getModuleStore('moduleModalParamState');
     const isLoading = getModuleStore('moduleLoadingState', [CONST_POST, CONST_PUT]);
+
     return (
         <StyledDialog
             open={isModalOpen}

@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { setContextState } from '../utils/contextStoreUtils/setContextUtils';
 import { getLocalStorage } from 'utils/commonFunc';
 import { CONST_LOCAL_STORAGE_LOGGED_USER } from 'utils/constants';
-import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
 
 // const BASE_URL = 'http://localhost:5000/api';
 const BASE_URL = 'https://api.scholae.innobs.in/api';
@@ -39,7 +38,6 @@ const formatResponse = (formatData) => {
 };
 
 const useApiCall = () => {
-    const { getModuleStoreAccess } = useStoreAccessByModule();
     const callApi = useCallback(async (configData) => {
         const {
             url = '',
@@ -55,24 +53,29 @@ const useApiCall = () => {
             // contextState from handler
             contextState,
             module,
+            // additional
+            toggleModal,
+            toggleMenu,
+            refetchAll,
             ...rest
         } = configData;
-        const getStoreAccess = (accessParam) => {
-            return getModuleStoreAccess({ module, accessParam, callFrom: 'useApiCall' });
-        };
+        //** Token section */
         const { userToken: localUserToken = '' } =
             getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
         const { authState: { loggedUser: { userToken = '' } = {} } = {}, setAppError } =
             contextState || {};
-
         const token = userToken || localUserToken;
+
+        //** Headers section */
         headers['Accept'] = 'application/json';
         if (['POST', 'PUT'].includes(method)) headers['Content-Type'] = 'application/json';
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
+        //** Loading begin */
         loadingParam && setContextState({ setState, paramName: loadingParam, paramValue: true });
         setAppError?.(null);
         try {
+            //** API section */
             console.log('API_INITIATED', { url, method });
             const response = await fetch(`${BASE_URL}${url}`, {
                 method,
@@ -81,20 +84,28 @@ const useApiCall = () => {
                     payload && { body: JSON.stringify(payload) })
             });
             console.log('API_ENDED', { url, method });
-            // Close modal (If the action is performing on modal)
-            if (rest?.isActionOnModal) {
-                const paramName = getStoreAccess('moduleModalParamName');
-                setContextState({ setState, paramName, paramValue: false });
+            setContextState({ setState, paramName: loadingParam, paramValue: false });
+            //** Modal close */ Close modal (If the action is performing on modal)
+            if (toggleModal && typeof toggleModal === 'function') {
+                toggleModal?.();
             }
-            if (rest?.refetchAll && typeof refetchAll === 'function') {
+            //** Menu toggle */
+            // if (toggleMenu && typeof toggleMenu === 'function') {
+            //     toggleMenu?.();
+            // }
+            //** Refetch section */
+            if (refetchAll && typeof refetchAll === 'function') {
                 refetchAll?.();
             }
-            const data = await response?.json();
-            const resData = sourceFormat
-                ? formatResponse({ data, sourceFormat, returnType, options: { readContent } })
-                : data;
-            stateParam && setContextState({ setState, paramName: stateParam, paramValue: resData });
-            setContextState({ setState, paramName: loadingParam, paramValue: false });
+            //** Store begin */
+            const data = response ? await response?.json() : '';
+            const resData =
+                sourceFormat && data
+                    ? formatResponse({ data, sourceFormat, returnType, options: { readContent } })
+                    : data;
+            if (stateParam && resData) {
+                setContextState({ setState, paramName: stateParam, paramValue: resData });
+            }
             return resData;
         } catch (error) {
             console.error(`Error: ${method}: ${url}: `, error);
@@ -102,8 +113,9 @@ const useApiCall = () => {
                 console.log('Not-authorized');
                 return;
             }
-            loadingParam &&
+            if (loadingParam) {
                 setContextState({ setState, paramName: loadingParam, paramValue: false });
+            }
             setAppError?.(error);
         }
     }, []);

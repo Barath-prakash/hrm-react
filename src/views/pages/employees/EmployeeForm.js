@@ -1,5 +1,5 @@
-import React from 'react';
-import CustomSlideDialog from 'ui-component/CustomSlideDialog';
+import React, { useEffect } from 'react';
+import CustomSlideDialog from 'ui-component/CustomSlideDialog/CustomSlideDialog';
 import FormBuilder from 'utils/formUtils/FormBuilder';
 import { formPostData } from 'utils/formUtils/commonUtils';
 import useValidateForm from 'utils/formUtils/useValidateForm';
@@ -13,6 +13,7 @@ import {
     CONST_LOCAL_STORAGE_LOGGED_USER
 } from 'utils/constants';
 import { languagesForSelect } from 'utils/variables';
+import { useState } from 'react';
 
 const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
 const initialState = {
@@ -116,8 +117,30 @@ const initialState = {
     }
 };
 
-const EmployeeForm = ({ postOrPut }) => {
+const formStateByData = (passData) => {
+    const formDataList = Object.values(initialState).map((el) => {
+        return {
+            ...el,
+            fieldValue: passData?.[el?.fieldName]
+        };
+    });
+    const formObj = {};
+    formDataList.forEach((formEl) => {
+        formObj[formEl.fieldName] = formEl;
+    });
+    return formObj;
+};
+
+const EmployeeForm = ({ postOrPut, employeesOne }) => {
     const { validateForm } = useValidateForm();
+    // @NOTE: Component state is only for update purpose
+    const [formState, setFormState] = useState(initialState);
+
+    useEffect(() => {
+        if (employeesOne?.employeeId) {
+            setFormState(formStateByData(employeesOne));
+        }
+    }, [employeesOne?.employeeId, JSON.stringify(employeesOne)]);
 
     const handleSubmit = async (payload) => {
         const isErrorExist = validateForm(CONST_MODULE_EMPLOYEES, payload);
@@ -134,7 +157,7 @@ const EmployeeForm = ({ postOrPut }) => {
             module={CONST_MODULE_EMPLOYEES}
             handleSubmit={handleSubmit}
         >
-            <FormBuilder initialState={initialState} module={CONST_MODULE_EMPLOYEES} />
+            <FormBuilder initialState={formState} module={CONST_MODULE_EMPLOYEES} />
         </CustomSlideDialog>
     );
 };

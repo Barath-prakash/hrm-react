@@ -19,6 +19,7 @@ const apiAction = ({
     delId,
     ...rest
 }) => {
+    // CRUD HANDLER
     const apiActions = {
         getAll: formActionGetAll({
             module,

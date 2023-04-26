@@ -1,21 +1,29 @@
 import useAppContext from 'store/useAppContext';
-import { CONST_MODULE_EMPLOYEES, CONST_MODULE_EMPLOYEES_MODAL } from '../constants';
+import {
+    CONST_MODULE_DEPARTMENTS,
+    CONST_MODULE_EMPLOYEES,
+    CONST_MODULE_EMPLOYEES_MODAL
+} from '../constants';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 
 const useModalUtils = () => {
     const {
         employeesState: { employeesModalOpen },
-        employeesMethods: { setEmployeesState }
+        employeesMethods: { setEmployeesState },
+        departmentState: { departmentsModalOPen },
+        departmentsMethod: { setDepartmentsState }
     } = useAppContext();
 
     // //** Modal */
     const modalParam = {
-        [CONST_MODULE_EMPLOYEES]: CONST_MODULE_EMPLOYEES_MODAL
+        [CONST_MODULE_EMPLOYEES]: CONST_MODULE_EMPLOYEES_MODAL,
+        [CONST_MODULE_DEPARTMENTS]: CONST_MODULE_DEPARTMENTS_MODAL
     };
 
     //** Add new modules state updater functions here */
     const moduleStateSetter = {
-        [CONST_MODULE_EMPLOYEES]: setEmployeesState
+        [CONST_MODULE_EMPLOYEES]: setEmployeesState,
+        [CONST_MODULE_DEPARTMENTS]: setDepartmentsState
     };
 
     //** Add new modules states here */

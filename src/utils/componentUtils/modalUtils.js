@@ -1,6 +1,7 @@
 import useAppContext from 'store/useAppContext';
 import {
     CONST_MODULE_DEPARTMENTS,
+    CONST_MODULE_DEPARTMENTS_MODAL,
     CONST_MODULE_EMPLOYEES,
     CONST_MODULE_EMPLOYEES_MODAL
 } from '../constants';
@@ -10,8 +11,8 @@ const useModalUtils = () => {
     const {
         employeesState: { employeesModalOpen },
         employeesMethods: { setEmployeesState },
-        departmentState: { departmentsModalOPen },
-        departmentsMethod: { setDepartmentsState }
+        departmentsState: { departmentsModalOpen },
+        departmentsMethods: { setDepartmentsState }
     } = useAppContext();
 
     // //** Modal */
@@ -28,7 +29,8 @@ const useModalUtils = () => {
 
     //** Add new modules states here */
     const moduleState = {
-        [CONST_MODULE_EMPLOYEES_MODAL]: employeesModalOpen
+        [CONST_MODULE_EMPLOYEES_MODAL]: employeesModalOpen,
+        [CONST_MODULE_DEPARTMENTS]: departmentsModalOpen
     };
 
     const handleToggleModal = ({ module, otherModalParam }) => {

@@ -7,9 +7,9 @@ const API_EMPLOYEES = {
 };
 
 const API_DEPARTMENTS = {
-    getAll: { api: 'department/all-/', ids: ['orgId'] },
-    get: { api: '/department/', ids: ['departmentId'] },
-    post: { api: '/department/' },
+    getAll: { api: '/all-department', ids: ['orgId'] },
+    get: { api: '/department', ids: ['departmentId'] },
+    post: { api: '/department' },
     put: { api: '/department', ids: ['OrgId', 'departmentId'] },
     delete: { api: '/department', ids: ['departmentId'] }
 };

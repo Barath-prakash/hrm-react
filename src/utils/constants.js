@@ -28,6 +28,9 @@ const CONST_MODULE_EMPLOYEES_MODAL = 'employeesModalOpen';
 const CONST_APP_CONFIRM_MODAL = 'isConfirmModalOpen';
 const CONST_APP_CONFIRM_MODAL_HANDLE = 'handleAppConfirmModal';
 
+// Department
+const CONST_MODULE_DEPARTMENTS_MODAL = 'departmentsModalOpen';
+
 // Menus
 const CONST_APP_MENU = 'isMoreMenuOpen';
 
@@ -62,6 +65,8 @@ export {
     CONST_MODULE_EMPLOYEES_MODAL,
     CONST_APP_CONFIRM_MODAL,
     CONST_APP_CONFIRM_MODAL_HANDLE,
+    // dept
+    CONST_MODULE_DEPARTMENTS_MODAL,
     // Menu
     CONST_APP_MENU
 };

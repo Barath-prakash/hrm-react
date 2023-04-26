@@ -34,8 +34,8 @@ const Departments = () => {
     const classes = useStyles();
     const {
         crudMethods,
-        employeesMethods: { setDepartmentState },
-        employeesState: { departmentName, page, size, getFetching, departmentOne, deleting }
+        departmentsMethods: { setDepartmentsState },
+        departmentsState: { page, size, getFetching, departmentOne, deleting }
     } = useAppContext();
     const { handleToggleModal } = useModalUtils();
 
@@ -57,7 +57,7 @@ const Departments = () => {
     }) => {
         apiAction({
             crudMethods,
-            setState: setDepartmentState,
+            setState: setDepartmentsState,
             module: CONST_MODULE_DEPARTMENTS,
             // pass params
             action,
@@ -121,7 +121,7 @@ const Departments = () => {
             />
             <Box className={classes.root}>
                 <CustomRowColumns
-                    listToLoop={departmentName?.content?.map((item, k) => (
+                    listToLoop={[].map((item, k) => (
                         <CustomCard>
                             <EmployeeCardContent
                                 key={k}
@@ -144,10 +144,10 @@ const Departments = () => {
                     getIdName="departmentId"
                 />
                 <CustomPagination
-                    listData={departmentName}
+                    listData={[]}
                     page={page}
                     size={size}
-                    setState={setDepartmentState}
+                    setState={setDepartmentsState}
                 />
                 <EmployeeForm postOrPut={postOrPut} departmentOne={departmentOne} />
             </Box>

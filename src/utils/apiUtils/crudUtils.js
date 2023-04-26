@@ -1,11 +1,12 @@
 // APIS SOURCE
 
-import { API_EMPLOYEES } from './apis';
+import { API_DEPARTMENTS, API_EMPLOYEES } from './apis';
 import { getLocalStorage } from '../commonFunc';
 import { CONST_LOCAL_STORAGE_LOGGED_USER } from '../constants';
 
 const APIS = {
-    EMPLOYEES: API_EMPLOYEES
+    EMPLOYEES: API_EMPLOYEES,
+    DEPARTMENTS: API_DEPARTMENTS
 };
 
 // operation

@@ -2,13 +2,13 @@ import React from 'react';
 import { formObjBuild } from 'utils/formUtils/formBuilderUtils';
 import CustomInput from '../../ui-component/forms/CustomInput';
 import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
-import useAppContext from 'store/useAppContext';
 import { useEffect } from 'react';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import { CONST_MODULE_DEPARTMENTS, CONST_MODULE_EMPLOYEES } from 'utils/constants';
 import CustomSelect from '../../ui-component/forms/CustomSelect';
 import CustomRadioGroup from '../../ui-component/forms/CustomRadioGroup';
 import CustomDatePicker from '../../ui-component/forms/CustomDatePicker';
+import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
+
 const formElements = {
     INPUT: (formData) => <CustomInput {...formData} />,
     SELECT: (formData) => <CustomSelect {...formData} />,
@@ -20,30 +20,11 @@ const formElements = {
 const getElement = (fieldType, formData) => formElements?.[fieldType]?.(formData);
 
 const FormBuilder = ({ initialState = {}, module = '' }) => {
-    const {
-        //** Employee Module */
-        employeesState: { formState: empFormState = {} } = {},
-        employeesMethods: { setEmployeesState } = {},
-        departmentsState: { formState: depFormState = {} } = {},
-        departmentsMethods: { setDepartmentsState } = {}
-        // Import Or Read more module here
-    } = useAppContext();
-
-    //** Add new modules state updater functions here */
-    const moduleStateSetter = {
-        [CONST_MODULE_EMPLOYEES]: setEmployeesState,
-        [CONST_MODULE_DEPARTMENTS]: setDepartmentsState
-    };
-
-    //** Add new modules states here */
-    const moduleState = {
-        [CONST_MODULE_EMPLOYEES]: empFormState,
-        [CONST_MODULE_DEPARTMENTS]: depFormState
-    };
+    const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
 
     const updateModuleState = (passValue) => {
         setContextState({
-            setState: moduleStateSetter?.[module],
+            setState: getMethodByModule({ module }),
             paramName: 'formState',
             paramValue: passValue
         });
@@ -53,7 +34,7 @@ const FormBuilder = ({ initialState = {}, module = '' }) => {
         updateModuleState(initialState);
     }, [initialState, module]);
 
-    const formState = moduleState?.[module];
+    const formState = getStateParamDataByModule({ module, passStateParamName: 'formState' });
 
     const handleChange = (fieldName, fieldValue) => {
         const newState = {

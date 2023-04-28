@@ -11,7 +11,7 @@ const CustomInput = ({
     fieldLabel = '',
     fieldName,
     fieldValue,
-    options: { isReq, validations = [], validationError = '' },
+    options: { placeholder, isReq, validations = [], validationError = '' },
     type,
     handleChange
 }) => {
@@ -19,7 +19,7 @@ const CustomInput = ({
         <TextField
             fullWidth
             label={fieldLabel}
-            placeholder={`Enter ${fieldLabel}`}
+            placeholder={placeholder || `Enter ${fieldLabel}`}
             type={type || 'text'}
             InputLabelProps={{
                 shrink: CONST_INPUT_LABEL_SHRINK

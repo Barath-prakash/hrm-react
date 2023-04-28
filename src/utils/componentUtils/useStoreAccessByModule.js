@@ -1,70 +1,20 @@
 import useAppContext from 'store/useAppContext';
-import {
-    CONST_DELETE,
-    CONST_GET,
-    CONST_GETALL,
-    CONST_MODULE_EMPLOYEES,
-    CONST_MODULE_EMPLOYEES_MODAL,
-    CONST_POST,
-    CONST_PUT
-} from 'utils/constants';
+import { makeFirstCaps } from 'utils/commonFunc';
 
 export default function useStoreAccessByModule() {
-    const {
-        employeesState: {
-            employeesModalOpen: empModalOpen,
-            formState: empFormState,
-            posting: empPosting,
-            putting: empPutting,
-            getAllFetching: empGetAllFetching,
-            getFetching: emoGetFetching,
-            deleting: empDeleting
-        } = {},
-        employeesMethods: { setEmployeesState } = {}
-    } = useAppContext();
+    const appContext = useAppContext();
 
-    const moduleModalParam = {
-        [CONST_MODULE_EMPLOYEES]: CONST_MODULE_EMPLOYEES_MODAL
+    // Default 'passMethodName' is set'Module'State
+    // E.g: If module is 'EMPLOYEES' ---> setEmployeesState method will be return
+    const getMethodByModule = ({ module, passMethodName }) => {
+        return appContext?.[`${module?.toLowerCase()}Methods`]?.[
+            passMethodName || `set${makeFirstCaps(module)}State`
+        ];
     };
 
-    const moduleModalState = {
-        [CONST_MODULE_EMPLOYEES]: empModalOpen
+    const getStateParamDataByModule = ({ module, passStateParamName }) => {
+        return appContext?.[`${module?.toLowerCase()}State`]?.[passStateParamName];
     };
 
-    const moduleStateSetter = {
-        [CONST_MODULE_EMPLOYEES]: setEmployeesState
-    };
-
-    const moduleFormState = {
-        [CONST_MODULE_EMPLOYEES]: empFormState
-    };
-
-    const moduleLoaderState = {
-        [CONST_MODULE_EMPLOYEES]: (loadingAction = CONST_GETALL) => {
-            const loaders = {
-                [CONST_GETALL]: empGetAllFetching,
-                [CONST_GET]: emoGetFetching,
-                [CONST_POST]: empPosting,
-                [CONST_PUT]: empPutting,
-                [CONST_DELETE]: empDeleting
-            };
-            if (Array.isArray(loadingAction)) {
-                return loadingAction.some((loadingParam) => loaders?.[loadingParam]);
-            }
-            return loaders?.[loadingAction];
-        }
-    };
-
-    const getModuleStoreAccess = ({ module, accessParam, loadingAction, callFrom = '' }) => {
-        const accessStore = {
-            moduleSetState: moduleStateSetter?.[module],
-            moduleModalParamName: moduleModalParam?.[module],
-            moduleModalParamState: moduleModalState?.[module],
-            moduleFormState: moduleFormState?.[module],
-            moduleLoadingState: moduleLoaderState?.[module]?.(loadingAction)
-        };
-        return accessParam ? accessStore?.[accessParam] : '';
-    };
-
-    return { getModuleStoreAccess };
+    return { getMethodByModule, getStateParamDataByModule };
 }

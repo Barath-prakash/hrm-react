@@ -5,7 +5,7 @@ import RowColumnsDOM from './RowColumnsDOM';
 import { isDomElement } from 'utils/commonFunc';
 
 const CustomRowColumns = (props) => {
-    const { isForm, listToLoop, md = 3, parentContentDOM } = props;
+    const { isForm, listToLoop, md = 3, parentContentDOM = null, passComponentName } = props;
 
     const getShowContent = (loopItem) => {
         const showComponents = {}; // Any common components
@@ -15,7 +15,7 @@ const CustomRowColumns = (props) => {
         const isItemElementOrStringOrNum = isElementDom || isElementStringOrNum;
         return isItemElementOrStringOrNum
             ? loopItem?.element || loopItem
-            : parentContentDOM || showComponents?.[passComponentName] || 'No content found';
+            : parentContentDOM || showComponents?.[passComponentName] || null;
     };
 
     return (

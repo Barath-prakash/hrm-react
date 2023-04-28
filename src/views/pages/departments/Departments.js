@@ -1,29 +1,24 @@
 import React, { useEffect } from 'react';
-import { CustomInput } from 'ui-component/forms/CustomInput';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import {
     CONST_MODULE_DEPARTMENTS,
     COMP_CustomCard,
-    CONST_ACTION_ADD,
-    CONST_APP_MENU,
     CONST_DELETE,
     CONST_GET,
     CONST_GETALL,
     CONST_POST,
-    CONST_PUT
+    CONST_PUT,
+    CONST_LOCAL_STORAGE_LOGGED_USER
 } from 'utils/constants';
 import useAppContext from 'store/useAppContext';
 // Pagination
 import CustomPagination from 'ui-component/CustomPagination/CustomPagination';
 import apiAction from 'utils/apiUtils/apiAction';
-import EmployeeForm from '../employees/EmployeeForm';
 import CustomCard from 'ui-component/CustomCard/CustomCard';
-import FormBuilder from 'utils/formUtils/FormBuilder';
 import DepartmentForm from './DepartmentForm';
-import { formPostData } from 'utils/formUtils/commonUtils';
-import useValidateForm from 'utils/formUtils/useValidateForm';
+import { getLocalStorage } from 'utils/commonFunc';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,7 +33,7 @@ const Departments = () => {
     const {
         crudMethods,
         departmentsMethods: { setDepartmentsState },
-        departmentsState: { departmentsData, page, size, getFetching, departmentOne, deleting }
+        departmentsState: { page, size, getFetching, deleting }
     } = useAppContext();
     const handleApiAction = ({
         action,
@@ -70,7 +65,6 @@ const Departments = () => {
     };
 
     useEffect(() => {
-        console.log('dep-useeffect');
         handleApiAction({ action: CONST_GETALL });
     }, [page, size]);
 
@@ -85,6 +79,8 @@ const Departments = () => {
     };
 
     const postOrPut = (payload) => {
+        const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
+        payload['employeeOrgId'] = orgId;
         return handleApiAction({
             action: payload?.[idName] ? CONST_PUT : CONST_POST,
             payload,
@@ -107,7 +103,7 @@ const Departments = () => {
             <DepartmentForm postOrPut={postOrPut} />
             <Box className={classes.root}>
                 <CustomRowColumns
-                    listToLoop={departmentsData?.content?.map((item, k) => (
+                    listToLoop={[].map((item, k) => (
                         <CustomCard>
                             <EmployeeCardContent
                                 key={k}
@@ -130,7 +126,7 @@ const Departments = () => {
                     getIdName="departmentId"
                 />
                 <CustomPagination
-                    listData={departmentsData}
+                    listData={[]}
                     page={page}
                     size={size}
                     setState={setDepartmentsState}

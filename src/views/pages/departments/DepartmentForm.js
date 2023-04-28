@@ -3,8 +3,11 @@ import FormBuilder from 'utils/formUtils/FormBuilder';
 import { formPostData } from 'utils/formUtils/commonUtils';
 import useValidateForm from 'utils/formUtils/useValidateForm';
 import CustomButton from 'ui-component/CustomButton/CustomButton';
+import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
+import CustomCard from 'ui-component/CustomCard/CustomCard';
+import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
 
-const departmentState = {
+const initialState = {
     departmentId: {
         fieldName: 'departmentId',
         fieldValue: 0,
@@ -13,7 +16,7 @@ const departmentState = {
     departmentName: {
         fieldName: 'departmentName',
         fieldValue: '',
-        options: { isReq: true, validationError: '' }
+        options: { placeholder: 'Enter Department Name', isReq: true, validationError: '' }
     },
     departmentOrgId: {
         fieldName: 'employeeOrgId',
@@ -22,21 +25,80 @@ const departmentState = {
     }
 };
 
-const DepartmentForm = () => {
+const DepartmentForm = ({ postOrPut }) => {
     const { validateForm } = useValidateForm();
+    const { getStateParamDataByModule } = useStoreAccessByModule();
 
-    const depHandleSubmit = async (payload) => {
-        const isErrorExist = validateForm(CONST_MODULE_DEPARTMENTS, payload);
+    const handleSubmit = async () => {
+        const { isErrorExist, formState: payload } = validateForm(CONST_MODULE_DEPARTMENTS);
         if (!isErrorExist) {
             const postData = formPostData(payload);
             await postOrPut(postData);
         }
     };
+
+    const isLoading = ['posting', 'putting'].some(
+        (param) =>
+            !!getStateParamDataByModule({
+                module: CONST_MODULE_DEPARTMENTS,
+                passStateParamName: param
+            })
+    );
+
+    //@Note Row is located inside one more row (Check browser)
+    // E.g: <Row>
+    //         <Col md='6'>Empty Column</Col>
+    //         <Col md='6'>
+    //           <Card padding='20>
+    //             <Row>
+    //                 <Col md='10'>
+    //                     <FormBuilder />
+    //                 </Col>
+    //                 <Col md='2'>
+    //                     <CustomButton />
+    //                 </Col>
+    //             </Row>
+    //           </Card>
+    //         </Col>
+    //     </Row>
     return (
-        <>
-            <FormBuilder initialState={departmentState} module={CONST_MODULE_DEPARTMENTS} />
-            <CustomButton onClick={depHandleSubmit}>Save</CustomButton>
-        </>
+        <CustomRowColumns
+            listToLoop={[
+                { element: null, md: 6 },
+                {
+                    element: (
+                        <CustomCard style={{ padding: 20 }}>
+                            <CustomRowColumns
+                                listToLoop={[
+                                    {
+                                        element: (
+                                            <FormBuilder
+                                                initialState={initialState}
+                                                module={CONST_MODULE_DEPARTMENTS}
+                                            />
+                                        ),
+                                        md: 10
+                                    },
+                                    {
+                                        element: (
+                                            <CustomButton
+                                                handleClick={handleSubmit}
+                                                style={{ alignSelf: 'center' }}
+                                                name="Save"
+                                                loading={isLoading}
+                                                showLoader
+                                            />
+                                        ),
+                                        md: 2
+                                    }
+                                ]}
+                            />
+                        </CustomCard>
+                    ),
+                    md: 6
+                }
+            ]}
+        />
     );
 };
 export default DepartmentForm;

@@ -8,6 +8,7 @@ import { getLocalStorage } from 'utils/commonFunc';
 import { setContextState } from '../../utils/contextStoreUtils/setContextUtils';
 import useCrudMethodHandler from './handlers/useCrudMethodHandler';
 import appState from './states/appState';
+import departmentsState from './states/departmentState';
 
 // Define a context
 export const AppContext = createContext({
@@ -24,6 +25,7 @@ const AppProvider = ({ children }) => {
     const [appError, setAppError] = useState('');
     const [authLocalState, setAuthState] = useState(authState);
     const [employeesLocalState, setEmployeesState] = useState(employeesState);
+    const [departmentsLocalState, setDepartmentsState] = useState(departmentsState);
     const [appLocalState, setAppState] = useState(appState);
     const contextState = {
         authState: authLocalState
@@ -66,7 +68,10 @@ const AppProvider = ({ children }) => {
         crudMethods,
         //** Employees */
         employeesState: employeesLocalState,
-        employeesMethods: { setEmployeesState }
+        employeesMethods: { setEmployeesState },
+        //**Departments */
+        departmentsState: departmentsLocalState,
+        departmentsMethods: { setDepartmentsState }
     };
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

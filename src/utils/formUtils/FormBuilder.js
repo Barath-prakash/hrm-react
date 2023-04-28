@@ -5,11 +5,10 @@ import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import useAppContext from 'store/useAppContext';
 import { useEffect } from 'react';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
+import { CONST_MODULE_DEPARTMENTS, CONST_MODULE_EMPLOYEES } from 'utils/constants';
 import CustomSelect from '../../ui-component/forms/CustomSelect';
 import CustomRadioGroup from '../../ui-component/forms/CustomRadioGroup';
 import CustomDatePicker from '../../ui-component/forms/CustomDatePicker';
-
 const formElements = {
     INPUT: (formData) => <CustomInput {...formData} />,
     SELECT: (formData) => <CustomSelect {...formData} />,
@@ -24,18 +23,22 @@ const FormBuilder = ({ initialState = {}, module = '' }) => {
     const {
         //** Employee Module */
         employeesState: { formState: empFormState = {} } = {},
-        employeesMethods: { setEmployeesState } = {}
+        employeesMethods: { setEmployeesState } = {},
+        departmentsState: { formState: depFormState = {} } = {},
+        departmentsMethods: { setDepartmentsState } = {}
         // Import Or Read more module here
     } = useAppContext();
 
     //** Add new modules state updater functions here */
     const moduleStateSetter = {
-        [CONST_MODULE_EMPLOYEES]: setEmployeesState
+        [CONST_MODULE_EMPLOYEES]: setEmployeesState,
+        [CONST_MODULE_DEPARTMENTS]: setDepartmentsState
     };
 
     //** Add new modules states here */
     const moduleState = {
-        [CONST_MODULE_EMPLOYEES]: empFormState
+        [CONST_MODULE_EMPLOYEES]: empFormState,
+        [CONST_MODULE_DEPARTMENTS]: depFormState
     };
 
     const updateModuleState = (passValue) => {

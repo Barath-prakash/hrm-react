@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Box } from '@mui/material';
+import { CustomInput } from 'ui-component/forms/CustomInput';
+import { Box, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import {
@@ -16,11 +17,13 @@ import {
 import useAppContext from 'store/useAppContext';
 // Pagination
 import CustomPagination from 'ui-component/CustomPagination/CustomPagination';
-import CustomRightButton from 'ui-component/CustomRightButton';
 import apiAction from 'utils/apiUtils/apiAction';
 import EmployeeForm from '../employees/EmployeeForm';
-import useModalUtils from 'utils/componentUtils/modalUtils';
 import CustomCard from 'ui-component/CustomCard/CustomCard';
+import FormBuilder from 'utils/formUtils/FormBuilder';
+import DepartmentForm from './DepartmentForm';
+import { formPostData } from 'utils/formUtils/commonUtils';
+import useValidateForm from 'utils/formUtils/useValidateForm';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,17 +37,9 @@ const Departments = () => {
     const classes = useStyles();
     const {
         crudMethods,
-        employeesMethods: { setDepartmentState },
-        employeesState: { departmentName, page, size, getFetching, departmentOne, deleting }
+        departmentsMethods: { setDepartmentsState },
+        departmentsState: { departmentsData, page, size, getFetching, departmentOne, deleting }
     } = useAppContext();
-    const { handleToggleModal } = useModalUtils();
-
-    const toggleModal = () => {
-        handleToggleModal({
-            module: CONST_MODULE_DEPARTMENTS
-        });
-    };
-
     const handleApiAction = ({
         action,
         payload,
@@ -57,7 +52,7 @@ const Departments = () => {
     }) => {
         apiAction({
             crudMethods,
-            setState: setDepartmentState,
+            setState: setDepartmentsState,
             module: CONST_MODULE_DEPARTMENTS,
             // pass params
             action,
@@ -85,8 +80,7 @@ const Departments = () => {
         handleApiAction({
             action: CONST_GET,
             getId,
-            idName,
-            toggleModal
+            idName
         });
     };
 
@@ -95,7 +89,6 @@ const Departments = () => {
             action: payload?.[idName] ? CONST_PUT : CONST_POST,
             payload,
             idName,
-            toggleModal,
             refetchAll
         });
     };
@@ -111,17 +104,10 @@ const Departments = () => {
 
     return (
         <>
-            <h1>Department Page</h1>
-            <CustomRightButton
-                action={CONST_ACTION_ADD}
-                module={CONST_MODULE_DEPARTMENTS}
-                handleClick={() => {
-                    toggleModal();
-                }}
-            />
+            <DepartmentForm postOrPut={postOrPut} />
             <Box className={classes.root}>
                 <CustomRowColumns
-                    listToLoop={departmentName?.content?.map((item, k) => (
+                    listToLoop={departmentsData?.content?.map((item, k) => (
                         <CustomCard>
                             <EmployeeCardContent
                                 key={k}
@@ -144,12 +130,11 @@ const Departments = () => {
                     getIdName="departmentId"
                 />
                 <CustomPagination
-                    listData={departmentName}
+                    listData={departmentsData}
                     page={page}
                     size={size}
-                    setState={setDepartmentState}
+                    setState={setDepartmentsState}
                 />
-                <EmployeeForm postOrPut={postOrPut} departmentOne={departmentOne} />
             </Box>
         </>
     );

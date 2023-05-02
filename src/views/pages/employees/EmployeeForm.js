@@ -13,7 +13,8 @@ import {
     CONST_LOCAL_STORAGE_LOGGED_USER
 } from 'utils/constants';
 import { languagesForSelect } from 'utils/variables';
-import { useState } from 'react';
+import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
+import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
 
 const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
 const initialState = {
@@ -133,23 +134,30 @@ const formStateByData = (passData) => {
 
 const EmployeeForm = ({ postOrPut, employeesOne }) => {
     const { validateForm } = useValidateForm();
-    // @NOTE: Component state is only for update purpose
-    const [formState, setFormState] = useState(initialState);
+    const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
 
     useEffect(() => {
         if (employeesOne?.employeeId) {
-            setFormState(formStateByData(employeesOne));
+            setContextState({
+                setState: getMethodByModule({ module: CONST_MODULE_EMPLOYEES }),
+                paramName: 'formState',
+                paramValue: formStateByData(employeesOne)
+            });
         }
     }, [employeesOne?.employeeId, JSON.stringify(employeesOne)]);
 
-    const handleSubmit = async (payload) => {
-        const isErrorExist = validateForm(CONST_MODULE_EMPLOYEES, payload);
+    const handleSubmit = async () => {
+        const { isErrorExist, formState: payload } = validateForm(CONST_MODULE_EMPLOYEES);
         if (!isErrorExist) {
             const postData = formPostData(payload);
             await postOrPut(postData);
         }
     };
 
+    const formState = getStateParamDataByModule({
+        module: CONST_MODULE_EMPLOYEES,
+        passStateParamName: 'formState'
+    });
     return (
         <CustomSlideDialog
             isForm
@@ -157,7 +165,10 @@ const EmployeeForm = ({ postOrPut, employeesOne }) => {
             module={CONST_MODULE_EMPLOYEES}
             handleSubmit={handleSubmit}
         >
-            <FormBuilder initialState={formState} module={CONST_MODULE_EMPLOYEES} />
+            <FormBuilder
+                initialState={employeesOne?.employeeId ? formState : initialState}
+                module={CONST_MODULE_EMPLOYEES}
+            />
         </CustomSlideDialog>
     );
 };

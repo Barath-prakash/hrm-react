@@ -6,4 +6,11 @@ const API_EMPLOYEES = {
     delete: { api: '/admin/delete-employee', ids: ['employeeId'] }
 };
 
-export { API_EMPLOYEES };
+const API_DEPARTMENTS = {
+    getAll: { api: '/all-department', ids: ['orgId'] },
+    get: { api: '/department', ids: ['departmentId'] },
+    post: { api: '/department', ids: ['orgId'] },
+    put: { api: '/department', ids: ['orgId', 'departmentId'] },
+    delete: { api: '/department', ids: ['departmentId'] }
+};
+export { API_EMPLOYEES, API_DEPARTMENTS };

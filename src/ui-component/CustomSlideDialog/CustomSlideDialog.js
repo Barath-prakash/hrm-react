@@ -53,35 +53,26 @@ export default function CustomSlideDialog({
     dialogHeader = '',
     handleSubmit
 }) {
-    const { getModuleStoreAccess } = useStoreAccessByModule();
+    const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
 
-    const moduleName = {
-        [CONST_MODULE_EMPLOYEES]: CONST_MODULE_EMPLOYEES
-    };
-
-    const getModuleStore = (accessParam, loadingAction) => {
-        return getModuleStoreAccess({
-            module: moduleName?.[module],
-            accessParam,
-            ...(loadingAction && { loadingAction })
-        });
-    };
-
+    const modalParamName = `${module.toLowerCase()}ModalOpen`;
     const setToggleModal = () => {
         setContextState({
-            setState: getModuleStore('moduleSetState'),
-            paramName: getModuleStore('moduleModalParamName'),
-            paramValue: !getModuleStore('moduleModalParamState')
+            setState: getMethodByModule({ module }),
+            paramName: modalParamName,
+            paramValue: !getStateParamDataByModule({ module, passStateParamName: modalParamName })
         });
     };
 
     const onSubmit = (e) => {
         e.preventDefault();
-        handleSubmit?.(getModuleStore('moduleFormState'));
+        handleSubmit?.();
     };
 
-    const isModalOpen = getModuleStore('moduleModalParamState');
-    const isLoading = getModuleStore('moduleLoadingState', [CONST_POST, CONST_PUT]);
+    const isModalOpen = getStateParamDataByModule({ module, passStateParamName: modalParamName });
+    const isLoading = ['posting', 'putting'].some(
+        (param) => !!getStateParamDataByModule({ module, passStateParamName: param })
+    );
 
     return (
         <StyledDialog

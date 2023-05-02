@@ -60,7 +60,7 @@ const useApiCall = () => {
             ...rest
         } = configData;
         //** Token section */
-        const { userToken: localUserToken = '' } =
+        const { userToken: localUserToken = '', userId = 0 } =
             getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
         const { authState: { loggedUser: { userToken = '' } = {} } = {}, setAppError } =
             contextState || {};
@@ -68,6 +68,7 @@ const useApiCall = () => {
 
         //** Headers section */
         headers['Accept'] = 'application/json';
+        // if (userId) headers['currentUserId'] = `${userId}`;
         if (['POST', 'PUT'].includes(method)) headers['Content-Type'] = 'application/json';
         if (token) headers['Authorization'] = `Bearer ${token}`;
 
@@ -98,11 +99,12 @@ const useApiCall = () => {
                 refetchAll?.();
             }
             //** Store begin */
-            const data = response ? await response?.json() : '';
+            const data = response?.ok ? await response?.json() : '';
             const resData =
                 sourceFormat && data
                     ? formatResponse({ data, sourceFormat, returnType, options: { readContent } })
                     : data;
+            console.log('resData', resData);
             if (stateParam && resData) {
                 setContextState({ setState, paramName: stateParam, paramValue: resData });
             }
@@ -116,6 +118,7 @@ const useApiCall = () => {
             if (loadingParam) {
                 setContextState({ setState, paramName: loadingParam, paramValue: false });
             }
+            console.log({ error });
             setAppError?.(error);
         }
     }, []);

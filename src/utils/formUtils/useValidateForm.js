@@ -1,21 +1,12 @@
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import useAppContext from 'store/useAppContext';
 import { CONST_FIELD_REQUIRED } from './commonUtils';
-import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
+import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
 
 const useValidateForm = () => {
-    const {
-        //** Employee Module */
-        employeesMethods: { setEmployeesState } = {}
-        // Import Or Read more module here
-    } = useAppContext();
+    const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
 
-    //** Add new modules state updater functions here */
-    const moduleStateSetter = {
-        [CONST_MODULE_EMPLOYEES]: setEmployeesState
-    };
-
-    const validateForm = (module, formState) => {
+    const validateForm = (module) => {
+        const formState = getStateParamDataByModule({ module, passStateParamName: 'formState' });
         let isErrorExist = false;
         const stateObjList = Object.values(formState).map((el) => {
             if (!isErrorExist) {
@@ -36,11 +27,11 @@ const useValidateForm = () => {
         }
 
         setContextState({
-            setState: moduleStateSetter?.[module],
+            setState: getMethodByModule({ module }),
             paramName: 'formState',
             paramValue: stateObj
         });
-        return isErrorExist;
+        return { isErrorExist, formState };
     };
 
     return { validateForm };

@@ -1,6 +1,7 @@
 // constants
 const CONST_LOCAL_STORAGE_LOGGED_USER = 'loggedUser';
 const CONST_MODULE_EMPLOYEES = 'EMPLOYEES';
+const CONST_MODULE_DEPARTMENTS = 'DEPARTMENTS';
 const CONST_PAGINATION_SIZE = 10;
 const CONST_ACTION_ADD = 'ADD';
 // CRUD
@@ -27,6 +28,9 @@ const CONST_MODULE_EMPLOYEES_MODAL = 'employeesModalOpen';
 const CONST_APP_CONFIRM_MODAL = 'isConfirmModalOpen';
 const CONST_APP_CONFIRM_MODAL_HANDLE = 'handleAppConfirmModal';
 
+// Department
+const CONST_MODULE_DEPARTMENTS_MODAL = 'departmentsModalOpen';
+
 // Menus
 const CONST_APP_MENU = 'isMoreMenuOpen';
 
@@ -37,6 +41,7 @@ export { COMP_CustomCard };
 export {
     CONST_LOCAL_STORAGE_LOGGED_USER,
     CONST_MODULE_EMPLOYEES,
+    CONST_MODULE_DEPARTMENTS,
     CONST_PAGINATION_SIZE,
     CONST_ACTION_ADD,
     // Crud
@@ -60,6 +65,8 @@ export {
     CONST_MODULE_EMPLOYEES_MODAL,
     CONST_APP_CONFIRM_MODAL,
     CONST_APP_CONFIRM_MODAL_HANDLE,
+    // dept
+    CONST_MODULE_DEPARTMENTS_MODAL,
     // Menu
     CONST_APP_MENU
 };

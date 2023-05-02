@@ -11,6 +11,7 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
+import CustomAlert from 'ui-component/CustomAlert/CustomAlert';
 
 // ==============================|| APP ||============================== //
 
@@ -22,6 +23,7 @@ const App = () => {
             <ThemeProvider theme={themes(customization)}>
                 <CssBaseline />
                 <NavigationScroll>
+                    <CustomAlert />
                     <Routes />
                 </NavigationScroll>
             </ThemeProvider>

@@ -14,7 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { CONST_MODULE_EMPLOYEES, CONST_POST, CONST_PUT } from 'utils/constants';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 import CustomButton from 'ui-component/CustomButton/CustomButton';
-import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
+import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
 
 const StyledDialog = styled(Dialog)(({ theme, width }) => ({
     '& .MuiDialog-paper': {

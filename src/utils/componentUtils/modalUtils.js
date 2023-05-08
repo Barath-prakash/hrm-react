@@ -1,5 +1,5 @@
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import useStoreAccessByModule from './useStoreAccessByModule';
+import useStoreAccessByModule from '../contextStoreUtils/useStoreAccessByModule';
 
 const useModalUtils = () => {
     const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();

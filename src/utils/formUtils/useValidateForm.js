@@ -1,6 +1,6 @@
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 import { CONST_FIELD_REQUIRED } from './commonUtils';
-import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
+import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
 
 const useValidateForm = () => {
     const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();

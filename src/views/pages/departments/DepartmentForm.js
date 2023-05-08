@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { CONST_MODULE_DEPARTMENTS } from 'utils/constants';
 import FormBuilder from 'utils/formUtils/FormBuilder';
 import { formPostData } from 'utils/formUtils/commonUtils';
@@ -5,7 +6,9 @@ import useValidateForm from 'utils/formUtils/useValidateForm';
 import CustomButton from 'ui-component/CustomButton/CustomButton';
 import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import CustomCard from 'ui-component/CustomCard/CustomCard';
-import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
+import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
+import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
+import { formStateByData } from 'utils/formUtils/formBuilderUtils';
 
 const initialState = {
     departmentId: {
@@ -25,15 +28,30 @@ const initialState = {
     }
 };
 
-const DepartmentForm = ({ postOrPut }) => {
+const DepartmentForm = ({ postOrPut, departmentsOne }) => {
+    const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
     const { validateForm } = useValidateForm();
-    const { getStateParamDataByModule } = useStoreAccessByModule();
+
+    useEffect(() => {
+        if (departmentsOne?.departmentId) {
+            setContextState({
+                setState: getMethodByModule({ module: CONST_MODULE_DEPARTMENTS }),
+                paramName: 'formState',
+                paramValue: formStateByData(departmentsOne, initialState)
+            });
+        }
+    }, [departmentsOne?.departmentId, JSON.stringify(departmentsOne)]);
 
     const handleSubmit = async () => {
         const { isErrorExist, formState: payload } = validateForm(CONST_MODULE_DEPARTMENTS);
         if (!isErrorExist) {
             const postData = formPostData(payload);
             await postOrPut(postData);
+            setContextState({
+                setState: getMethodByModule({ module: CONST_MODULE_DEPARTMENTS }),
+                paramName: 'formState',
+                paramValue: initialState
+            });
         }
     };
 

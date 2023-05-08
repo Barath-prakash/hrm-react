@@ -104,7 +104,6 @@ const useApiCall = () => {
                 sourceFormat && data
                     ? formatResponse({ data, sourceFormat, returnType, options: { readContent } })
                     : data;
-            console.log('resData', resData);
             if (stateParam && resData) {
                 setContextState({ setState, paramName: stateParam, paramValue: resData });
             }
@@ -118,7 +117,6 @@ const useApiCall = () => {
             if (loadingParam) {
                 setContextState({ setState, paramName: loadingParam, paramValue: false });
             }
-            console.log({ error });
             setAppError?.(error);
         }
     }, []);

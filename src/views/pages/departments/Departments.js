@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import {
     CONST_MODULE_DEPARTMENTS,
-    COMP_CustomCard,
     CONST_DELETE,
     CONST_GET,
     CONST_GETALL,
@@ -15,25 +14,24 @@ import useAppContext from 'store/useAppContext';
 // Pagination
 import apiAction from 'utils/apiUtils/apiAction';
 import DepartmentForm from './DepartmentForm';
-import departmentsState from 'store/providers/states/departmentsState';
 import { getLocalStorage } from 'utils/commonFunc';
 import CustomTable from 'ui-component/tables/CustomTable';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(0)
+        padding: theme.spacing(0),
+        marginTop: 20
     }
 }));
-const idName = 'departmentId';
 
+const idName = 'departmentId';
 const Departments = () => {
     const classes = useStyles();
     const {
         crudMethods,
         departmentsMethods: { setDepartmentsState },
-        departmentsState: { page, size, getFetching, deleting, departmentsData }
+        departmentsState: { page, size, departmentsData, departmentsOne }
     } = useAppContext();
     const handleApiAction = ({
         action,
@@ -45,7 +43,7 @@ const Departments = () => {
         refetchAll,
         ...rest
     }) => {
-        apiAction({
+        return apiAction({
             crudMethods,
             setState: setDepartmentsState,
             module: CONST_MODULE_DEPARTMENTS,
@@ -63,6 +61,7 @@ const Departments = () => {
             ...rest
         });
     };
+
     useEffect(() => {
         handleApiAction({ action: CONST_GETALL });
     }, [page, size]);
@@ -96,40 +95,21 @@ const Departments = () => {
             refetchAll
         });
     };
-    const tableMenuList = [
-        {
-            action: 'get',
-            icon: <EditIcon sx={{ pr: 1 }} />,
-            label: 'Edit',
-            handleMenuClick: () => {
-                get([idName]);
-            },
-            isLoading: getFetching
-        },
-        {
-            action: 'delete',
-            icon: <DeleteIcon sx={{ pr: 1 }} />,
-            label: 'Delete',
-            handleMenuClick: () => {
-                deleteItem([idName]);
-            },
-            isLoading: deleting
-        }
-    ];
-    // console.log('departmentsData:', departmentsData);
+
     const tableKeys = ['departmentId', 'departmentName'];
-    const tableHead = ['Department ID', 'Department Name'];
+    const tableHead = ['Department ID', 'Department Name', 'Action'];
     return (
         <>
-            <DepartmentForm postOrPut={postOrPut} />
+            <DepartmentForm postOrPut={postOrPut} departmentsOne={departmentsOne} />
             <Box className={classes.root}>
                 <CustomTable
+                    module={CONST_MODULE_DEPARTMENTS}
                     dataList={departmentsData}
                     dataKeys={tableKeys}
                     headers={tableHead}
-                    delData={deleteItem}
+                    idName={idName}
+                    deleteItem={deleteItem}
                     getItem={get}
-                    menuList={tableMenuList}
                 />
             </Box>
         </>

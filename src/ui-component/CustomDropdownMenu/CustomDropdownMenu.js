@@ -9,11 +9,14 @@ import {
 } from 'utils/constants';
 import useAppContext from 'store/useAppContext';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
+import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
+import { getTableEditDeleteDomList } from 'ui-component/commonUtilities';
 
-const CustomDropdownMenu = ({ module, menuList }) => {
+const CustomDropdownMenu = ({ module, getItem, deleteItem }) => {
     const {
         appMethods: { setAppState }
     } = useAppContext();
+    const { getStateParamDataByModule } = useStoreAccessByModule();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -40,6 +43,16 @@ const CustomDropdownMenu = ({ module, menuList }) => {
         }
     };
 
+    const getMenuList = () => {
+        return getTableEditDeleteDomList({
+            getItem,
+            getFetching: getStateParamDataByModule({ module, passStateParamName: 'getFetching' }),
+            deleteItem,
+            deleting: getStateParamDataByModule({ module, passStateParamName: 'deleting' })
+        });
+    };
+
+    const menuList = getMenuList?.();
     return (
         <>
             <IconButton aria-label="share" onClick={handleClick}>

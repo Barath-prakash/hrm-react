@@ -7,7 +7,7 @@ import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
 import CustomSelect from '../../ui-component/forms/CustomSelect';
 import CustomRadioGroup from '../../ui-component/forms/CustomRadioGroup';
 import CustomDatePicker from '../../ui-component/forms/CustomDatePicker';
-import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
+import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
 
 const formElements = {
     INPUT: (formData) => <CustomInput {...formData} />,

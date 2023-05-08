@@ -4,8 +4,6 @@ import { makeStyles } from '@mui/styles';
 import { Email, LocalPhone } from '@mui/icons-material';
 import CustomStatus from 'ui-component/CustomStatus';
 import { dateFormat } from 'utils/commonFunc';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import CustomDropdownMenu from 'ui-component/CustomDropdownMenu/CustomDropdownMenu';
 import { CONST_MODULE_EMPLOYEES } from 'utils/constants';
 
@@ -38,35 +36,18 @@ const useStyles = makeStyles((theme) => ({
     iconText: { display: 'flex', alignItems: 'center' }
 }));
 
-const EmployeeCardContent = ({ itemInfo, idName, getItem, deleteItem, getFetching, deleting }) => {
+const EmployeeCardContent = ({ itemInfo, idName, getItem, deleteItem }) => {
     const classes = useStyles();
-
-    const menuList = [
-        {
-            action: 'get',
-            icon: <EditIcon sx={{ pr: 1 }} />,
-            label: 'Edit',
-            handleMenuClick: () => {
-                getItem(itemInfo?.[idName]);
-            },
-            isLoading: getFetching
-        },
-        {
-            action: 'delete',
-            icon: <DeleteIcon sx={{ pr: 1 }} />,
-            label: 'Delete',
-            handleMenuClick: () => {
-                deleteItem(itemInfo?.[idName]);
-            },
-            isLoading: deleting
-        }
-    ];
 
     return (
         <>
             <Box display="flex" alignItems="center" justifyContent="flex-end" padding={1}>
                 <CustomStatus status={itemInfo?.status} />
-                <CustomDropdownMenu module={CONST_MODULE_EMPLOYEES} menuList={menuList} />
+                <CustomDropdownMenu
+                    module={CONST_MODULE_EMPLOYEES}
+                    getItem={() => getItem?.(itemInfo?.[idName])}
+                    deleteItem={() => deleteItem?.(itemInfo?.[idName])}
+                />
             </Box>
             <CardActionArea>
                 <Box display="flex" alignItems="center" justifyContent="center" padding={1}>

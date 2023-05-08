@@ -6,13 +6,10 @@ import { useEffect } from 'react';
 
 const CustomAlert = ({ open, handleClose, message = '', color = 'success' }) => {
     const { appError } = useAppContext();
-    console.log('appError', appError);
     const vertical = 'top';
     const horizontal = 'right';
 
-    useEffect(() => {
-        console.log('insideeee--hoool', appError);
-    }, [appError]);
+    useEffect(() => {}, [appError]);
 
     return (
         <Snackbar

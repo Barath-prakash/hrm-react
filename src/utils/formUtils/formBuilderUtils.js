@@ -31,4 +31,18 @@ const formObjBuild = (formProps) => {
     };
 };
 
-export { formObjBuild };
+const formStateByData = (passData, initialState) => {
+    const formDataList = Object.values(initialState).map((el) => {
+        return {
+            ...el,
+            fieldValue: passData?.[el?.fieldName]
+        };
+    });
+    const formObj = {};
+    formDataList.forEach((formEl) => {
+        formObj[formEl.fieldName] = formEl;
+    });
+    return formObj;
+};
+
+export { formObjBuild, formStateByData };

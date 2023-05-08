@@ -1,4 +1,3 @@
-import { AssignmentReturn, ElderlyOutlined } from '@mui/icons-material';
 import {
     Table,
     TableHead,
@@ -9,9 +8,16 @@ import {
     Paper
 } from '@mui/material';
 import CustomDropdownMenu from 'ui-component/CustomDropdownMenu/CustomDropdownMenu';
-import { CONST_MODULE_DEPARTMENTS } from 'utils/constants';
 
-const CustomTable = ({ dataList = [], dataKeys = [], headers = [], menuList = [] }) => {
+const CustomTable = ({
+    module,
+    dataList = [],
+    dataKeys = [],
+    headers = [],
+    getItem = undefined,
+    deleteItem = undefined,
+    idName
+}) => {
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -23,16 +29,17 @@ const CustomTable = ({ dataList = [], dataKeys = [], headers = [], menuList = []
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dataList?.map((tableObj, i) => {
+                    {dataList?.map((dataObj, i) => {
                         return (
                             <TableRow key={i}>
                                 {dataKeys.map((objKey, i1) => {
-                                    return <TableCell key={i1}>{tableObj?.[objKey]}</TableCell>;
+                                    return <TableCell key={i1}>{dataObj?.[objKey]}</TableCell>;
                                 })}
                                 <TableCell>
                                     <CustomDropdownMenu
-                                        module={CONST_MODULE_DEPARTMENTS}
-                                        menuList={menuList}
+                                        module={module}
+                                        getItem={() => getItem?.(dataObj?.[idName])}
+                                        deleteItem={() => deleteItem?.(dataObj?.[idName])}
                                     />
                                 </TableCell>
                             </TableRow>

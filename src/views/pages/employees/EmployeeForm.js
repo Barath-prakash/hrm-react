@@ -14,7 +14,8 @@ import {
 } from 'utils/constants';
 import { languagesForSelect } from 'utils/variables';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import useStoreAccessByModule from 'utils/componentUtils/useStoreAccessByModule';
+import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
+import { formStateByData } from 'utils/formUtils/formBuilderUtils';
 
 const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
 const initialState = {
@@ -118,20 +119,6 @@ const initialState = {
     }
 };
 
-const formStateByData = (passData) => {
-    const formDataList = Object.values(initialState).map((el) => {
-        return {
-            ...el,
-            fieldValue: passData?.[el?.fieldName]
-        };
-    });
-    const formObj = {};
-    formDataList.forEach((formEl) => {
-        formObj[formEl.fieldName] = formEl;
-    });
-    return formObj;
-};
-
 const EmployeeForm = ({ postOrPut, employeesOne }) => {
     const { validateForm } = useValidateForm();
     const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
@@ -141,7 +128,7 @@ const EmployeeForm = ({ postOrPut, employeesOne }) => {
             setContextState({
                 setState: getMethodByModule({ module: CONST_MODULE_EMPLOYEES }),
                 paramName: 'formState',
-                paramValue: formStateByData(employeesOne)
+                paramValue: formStateByData(employeesOne, initialState)
             });
         }
     }, [employeesOne?.employeeId, JSON.stringify(employeesOne)]);

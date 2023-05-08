@@ -19,7 +19,7 @@ const initialState = {
         options: { placeholder: 'Enter Department Name', isReq: true, validationError: '' }
     },
     departmentOrgId: {
-        fieldName: 'employeeOrgId',
+        fieldName: 'employerOrgId',
         fieldValue: 0,
         options: { isNotField: true }
     }

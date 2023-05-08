@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import {
     CONST_MODULE_DEPARTMENTS,
     COMP_CustomCard,
@@ -14,26 +13,27 @@ import {
 } from 'utils/constants';
 import useAppContext from 'store/useAppContext';
 // Pagination
-import CustomPagination from 'ui-component/CustomPagination/CustomPagination';
 import apiAction from 'utils/apiUtils/apiAction';
-import CustomCard from 'ui-component/CustomCard/CustomCard';
 import DepartmentForm from './DepartmentForm';
+import departmentsState from 'store/providers/states/departmentsState';
 import { getLocalStorage } from 'utils/commonFunc';
-
+import CustomTable from 'ui-component/tables/CustomTable';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         padding: theme.spacing(0)
     }
 }));
-
 const idName = 'departmentId';
+
 const Departments = () => {
     const classes = useStyles();
     const {
         crudMethods,
         departmentsMethods: { setDepartmentsState },
-        departmentsState: { page, size, getFetching, deleting }
+        departmentsState: { page, size, getFetching, deleting, departmentsData }
     } = useAppContext();
     const handleApiAction = ({
         action,
@@ -63,7 +63,6 @@ const Departments = () => {
             ...rest
         });
     };
-
     useEffect(() => {
         handleApiAction({ action: CONST_GETALL });
     }, [page, size]);
@@ -80,7 +79,7 @@ const Departments = () => {
 
     const postOrPut = (payload) => {
         const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
-        payload['employeeOrgId'] = orgId;
+        payload['employerOrgId'] = orgId;
         return handleApiAction({
             action: payload?.[idName] ? CONST_PUT : CONST_POST,
             payload,
@@ -97,39 +96,40 @@ const Departments = () => {
             refetchAll
         });
     };
-
+    const tableMenuList = [
+        {
+            action: 'get',
+            icon: <EditIcon sx={{ pr: 1 }} />,
+            label: 'Edit',
+            handleMenuClick: () => {
+                get([idName]);
+            },
+            isLoading: getFetching
+        },
+        {
+            action: 'delete',
+            icon: <DeleteIcon sx={{ pr: 1 }} />,
+            label: 'Delete',
+            handleMenuClick: () => {
+                deleteItem([idName]);
+            },
+            isLoading: deleting
+        }
+    ];
+    // console.log('departmentsData:', departmentsData);
+    const tableKeys = ['departmentId', 'departmentName'];
+    const tableHead = ['Department ID', 'Department Name'];
     return (
         <>
             <DepartmentForm postOrPut={postOrPut} />
             <Box className={classes.root}>
-                <CustomRowColumns
-                    listToLoop={[].map((item, k) => (
-                        <CustomCard>
-                            <EmployeeCardContent
-                                key={k}
-                                itemInfo={item}
-                                idName="departmentId"
-                                getItem={get}
-                                deleteItem={deleteItem}
-                                getFetching={getFetching}
-                                deleting={deleting}
-                            />
-                        </CustomCard>
-                    ))}
-                    componentName={COMP_CustomCard}
-                    componentProps={{
-                        showStatus: true,
-                        showMore: true,
-                        componentFor: CONST_MODULE_DEPARTMENTS
-                    }}
-                    get={get}
-                    getIdName="departmentId"
-                />
-                <CustomPagination
-                    listData={[]}
-                    page={page}
-                    size={size}
-                    setState={setDepartmentsState}
+                <CustomTable
+                    dataList={departmentsData}
+                    dataKeys={tableKeys}
+                    headers={tableHead}
+                    delData={deleteItem}
+                    getItem={get}
+                    menuList={tableMenuList}
                 />
             </Box>
         </>

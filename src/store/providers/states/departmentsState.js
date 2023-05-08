@@ -1,6 +1,6 @@
 const departmentsState = {
     // Data
-    departmentsData: {}, // getAll
+    departmentsData: [], // getAll
     departmentsForm: {}, // post/put
     departmentsOne: {}, // get
     page: 1,

@@ -68,7 +68,7 @@ const useApiCall = () => {
 
         //** Headers section */
         headers['Accept'] = 'application/json';
-        // if (userId) headers['currentUserId'] = `${userId}`;
+        if (userId) headers['currentUserId'] = `${userId}`;
         if (['POST', 'PUT'].includes(method)) headers['Content-Type'] = 'application/json';
         if (token) headers['Authorization'] = `Bearer ${token}`;
 

@@ -17,6 +17,7 @@ const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialI
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 const Employees = Loadable(lazy(() => import('views/pages/employees/Employees')));
 const Departments = Loadable(lazy(() => import('views/pages/departments/Departments')));
+const Designations = Loadable(lazy(() => import('views/pages/designations/Designations')));
 
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
@@ -55,6 +56,15 @@ const MainRoutes = (isAuthenticated) => ({
                 {
                     path: '',
                     element: <Departments />
+                }
+            ]
+        },
+        {
+            path: 'designations',
+            children: [
+                {
+                    path: '',
+                    element: <Designations />
                 }
             ]
         },

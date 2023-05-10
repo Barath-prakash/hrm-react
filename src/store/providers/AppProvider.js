@@ -9,6 +9,7 @@ import { setContextState } from '../../utils/contextStoreUtils/setContextUtils';
 import useCrudMethodHandler from './handlers/useCrudMethodHandler';
 import appState from './states/appState';
 import departmentsState from './states/departmentsState';
+import designationsState from './states/designationsState';
 
 // Define a context
 export const AppContext = createContext({
@@ -28,6 +29,7 @@ const AppProvider = ({ children }) => {
     const [employeesLocalState, setEmployeesState] = useState(employeesState);
     // Department
     const [departmentsLocalState, setDepartmentsState] = useState(departmentsState);
+    const [designationsLocalState, setDesignationsState] = useState(designationsState);
     const [appLocalState, setAppState] = useState(appState);
     const contextState = {
         authState: authLocalState
@@ -73,7 +75,10 @@ const AppProvider = ({ children }) => {
         employeesMethods: { setEmployeesState },
         // Departments
         departmentsState: departmentsLocalState,
-        departmentsMethods: { setDepartmentsState }
+        departmentsMethods: { setDepartmentsState },
+        //Designations
+        designationsState: designationsLocalState,
+        designationsMethods: { setDesignationsState }
     };
     return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };

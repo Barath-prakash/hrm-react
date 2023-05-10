@@ -6,5 +6,9 @@ const languagesForSelect = [
     // { value: 'KN', label: 'Kannada' },
     // { value: 'HI', label: 'Hindi' },
 ];
-
-export { languagesForSelect };
+const departmentsForSelect = [
+    { value: 1, label: 'new dep' },
+    { value: 2, label: ' dep' },
+    { value: 3, label: 'bha dep' }
+];
+export { languagesForSelect, departmentsForSelect };

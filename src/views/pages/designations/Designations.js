@@ -11,7 +11,8 @@ import {
     CONST_GETALL,
     CONST_POST,
     CONST_PUT,
-    CONST_LOCAL_STORAGE_LOGGED_USER
+    CONST_LOCAL_STORAGE_LOGGED_USER,
+    CONST_MODULE_DEPARTMENTS
 } from 'utils/constants';
 
 // Pagination
@@ -37,6 +38,7 @@ const Designations = () => {
     } = useAppContext();
     const handleApiAction = ({
         action,
+        module,
         payload,
         orgId,
         getId,
@@ -48,7 +50,7 @@ const Designations = () => {
         return apiAction({
             crudMethods,
             setState: setDesignationsState,
-            module: CONST_MODULE_DESIGNATIONS,
+            module: module || CONST_MODULE_DESIGNATIONS,
             // pass params
             action,
             payload,
@@ -66,6 +68,7 @@ const Designations = () => {
 
     useEffect(() => {
         handleApiAction({ action: CONST_GETALL });
+        handleApiAction({ action: CONST_GETALL, module: CONST_MODULE_DEPARTMENTS });
     }, [page, size]);
 
     const refetchAll = () => handleApiAction({ action: CONST_GETALL });

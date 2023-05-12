@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
-import { CONST_FIELD_SELECT, CONST_MODULE_DESIGNATIONS } from 'utils/constants';
+import {
+    CONST_FIELD_SELECT,
+    CONST_MODULE_DEPARTMENTS,
+    CONST_MODULE_DESIGNATIONS
+} from 'utils/constants';
 import FormBuilder from 'utils/formUtils/FormBuilder';
 import { formPostData } from 'utils/formUtils/commonUtils';
 import useValidateForm from 'utils/formUtils/useValidateForm';
@@ -8,8 +12,7 @@ import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import CustomCard from 'ui-component/CustomCard/CustomCard';
 import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import { formStateByData } from 'utils/formUtils/formBuilderUtils';
-import { departmentsForSelect } from 'utils/variables';
+import useAppContext from 'store/useAppContext';
 
 const initialState = {
     departmentId: {
@@ -17,7 +20,7 @@ const initialState = {
         fieldLabel: 'Department',
         fieldValue: 0,
         fieldType: CONST_FIELD_SELECT,
-        options: { md: 6, isReq: true, validationError: '', selectOptions: departmentsForSelect }
+        options: { md: 6, isReq: true, validationError: '', selectOptions: [] }
     },
     designationName: {
         fieldName: 'designationtName',
@@ -27,26 +30,30 @@ const initialState = {
     },
     designationId: {
         fieldName: 'designationId',
-
+        fieldLabel: 'Designation ID',
         fieldValue: 0,
         options: { isNotField: true }
     }
 };
 
 const DesignationForm = ({ postOrPut, designationsOne }) => {
+    const {
+        departmentsState: { departmentsData }
+    } = useAppContext();
     const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
     const { validateForm } = useValidateForm();
+    console.log('*******', useAppContext());
 
-    // useEffect(() => {
-    //     if (designationsOne?.designationId) {
-    //         setContextState({
-    //             setState: getMethodByModule({ module: CONST_MODULE_DESIGNATIONS }),
-    //             paramName: 'formState',
-    //             paramValue: formStateByData(designationsOne, initialState)
-    //         });
-    //     }
-    // }, [designationsOne?.designationId, JSON.stringify(designationsOne)]);
-
+    useEffect(() => {
+        initialState.departmentId.options.selectOptions = formatToSelect(departmentsData);
+    }, []);
+    const formatToSelect = (passList) => {
+        return passList.map((el) => ({
+            label: el.departmentName,
+            value: el.departmentId
+        }));
+    };
+    console.log(formatToSelect);
     const handleSubmit = async () => {
         const { isErrorExist, formState: payload } = validateForm(CONST_MODULE_DESIGNATIONS);
         if (!isErrorExist) {

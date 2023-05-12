@@ -53,7 +53,7 @@ const Departments = () => {
             orgId,
             getId,
             getIdName,
-            // pagination
+            // `pagination`
             page,
             size,
             delId,

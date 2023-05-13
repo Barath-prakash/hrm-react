@@ -23,6 +23,8 @@ const useStyles = makeStyles({
 const CustomDatePicker = ({
     fieldLabel,
     handleChange,
+    onChage,
+    onSelect,
     fieldName,
     fieldValue: passSelectedDate,
     showOnlyMonthAndYear,
@@ -53,10 +55,14 @@ const CustomDatePicker = ({
     const handleNextPrevChange = (action) => {
         if (action === 'previous') {
             const prevDate = sub(new Date(selectedDate), 'days');
-            handleChange(fieldName, prevDate);
+            handleChange && handleChange?.(prevDate, fieldName);
+            onChage && onChage?.(prevDate, fieldName);
+            onSelect && onSelect?.(prevDate, fieldName);
         } else if (action === 'next') {
             const nextDate = add(new Date(selectedDate), 'days');
-            handleChange(fieldName, nextDate);
+            handleChange && handleChange?.(nextDate, fieldName);
+            onChage && onChage?.(nextDate, fieldName);
+            onSelect && onSelect?.(nextDate, fieldName);
         }
     };
 

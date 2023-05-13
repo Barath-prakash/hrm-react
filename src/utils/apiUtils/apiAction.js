@@ -24,18 +24,20 @@ const apiAction = ({
         getAll: formActionGetAll({
             module,
             page,
-            size
+            size,
+            ...rest
         }),
-        get: formActionGet({ module, orgId, idName, [idName]: getId }),
+        get: formActionGet({ module, orgId, idName, [idName]: getId, ...rest }),
         post: formActionPost({ module, payload, orgId, ...rest }),
         put: formActionPut({
             module,
             payload,
             orgId,
             idName,
-            [idName]: payload?.[idName]
+            [idName]: payload?.[idName],
+            ...rest
         }),
-        delete: formActionDelete({ module, orgId, idName, [idName]: delId })
+        delete: formActionDelete({ module, orgId, idName, [idName]: delId, ...rest })
     };
 
     return crudMethods.crudService({

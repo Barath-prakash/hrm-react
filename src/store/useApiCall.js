@@ -104,6 +104,7 @@ const useApiCall = () => {
                 sourceFormat && data
                     ? formatResponse({ data, sourceFormat, returnType, options: { readContent } })
                     : data;
+
             if (stateParam && resData) {
                 setContextState({ setState, paramName: stateParam, paramValue: resData });
             }

@@ -8,26 +8,19 @@ const icons = {
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
-const payroll = {
-    id: 'payroll',
+const employees = {
+    id: 'employees',
     title: 'Employees',
     type: 'group',
     children: [
         {
-            id: 'login3',
+            id: 'employees-main',
             title: 'Employees',
             type: 'item',
             url: '/employees',
-            target: true
-        },
-        {
-            id: 'register3',
-            title: 'Register',
-            type: 'item',
-            url: '/pages/register/register3',
             target: true
         }
     ]
 };
 
-export default payroll;
+export default employees;

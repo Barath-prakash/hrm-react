@@ -11,10 +11,10 @@ const useStyles = makeStyles((theme) => ({
 
 const RowColumnsDOM = (props) => {
     const classes = useStyles();
-    const { isForm, listToLoop, getShowContent, md, sm = 6, xs = 12 } = props;
+    const { isForm, listToLoop, getShowContent, md, sm = 6, xs = 12, style } = props;
 
     return (
-        <Box className={classes.root}>
+        <Box className={classes.root} style={style}>
             <Grid container spacing={isForm ? 3 : 2}>
                 {listToLoop?.map((loopItem = {}, i) => (
                     <Grid

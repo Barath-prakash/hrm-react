@@ -13,6 +13,8 @@ const designationsState = {
     deleting: false,
     //Form
     designationsModalOpen: false,
-    formState: {}
+    formState: {},
+    // Additional
+    parentDepartmentId: 0
 };
 export default designationsState;

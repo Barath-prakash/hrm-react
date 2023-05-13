@@ -13,6 +13,7 @@ const API_DEPARTMENTS = {
     put: { api: '/department', ids: ['orgId', 'departmentId'] },
     delete: { api: '/department', ids: ['departmentId'] }
 };
+
 const API_DESIGNATIONS = {
     getAll: { api: '/all-designation', ids: ['orgId', 'departmentId'] },
     get: { api: '/designation', ids: ['designationId'] },
@@ -20,4 +21,5 @@ const API_DESIGNATIONS = {
     delete: { api: '/designation', ids: ['designationId'] },
     put: { api: '/designation', ids: ['orgId', 'designationId'] }
 };
+
 export { API_EMPLOYEES, API_DEPARTMENTS, API_DESIGNATIONS };

@@ -11,18 +11,29 @@ export default function CustomSelect({
     module,
     fieldLabel = '',
     fieldValue,
+    value = '',
     fieldName,
-    options: { isReq, validations = [], validationError = '', selectOptions },
-    handleChange
+    options: {
+        isReq,
+        validations = [],
+        validationError = '',
+        selectOptions,
+        placeholder: optionPlaceHolder
+    },
+    handleChange,
+    onChange,
+    onSelect,
+    placeholder,
+    clearable = false
 }) {
+    const selected = selectOptions?.find((el) => el?.value === fieldValue || value);
     return (
         <Autocomplete
             id={`${module}_${fieldValue}`}
             multiple={isMulti}
             options={selectOptions}
             getOptionLabel={(option) => option.label}
-            value={selectOptions?.find((el) => el?.value === fieldValue)}
-            va
+            value={selected || null}
             renderInput={(params) => (
                 <TextField
                     {...params}
@@ -32,7 +43,7 @@ export default function CustomSelect({
                     variant={CONST_INPUT_VARIANT}
                     size={CONST_INPUT_SIZE}
                     label={fieldLabel}
-                    placeholder={`Select ${fieldLabel}`}
+                    placeholder={optionPlaceHolder || placeholder || `Select ${fieldLabel}`}
                     error={!!validationError}
                     helperText={validationError || ''}
                     // required={isReq}
@@ -40,9 +51,12 @@ export default function CustomSelect({
             )}
             onChange={(event, newValue) => {
                 if (newValue?.value !== fieldValue) {
-                    handleChange(fieldName, newValue?.value);
+                    handleChange && handleChange?.(newValue?.value, fieldName);
+                    onChange && onChange?.(newValue?.value, fieldName);
+                    onSelect && onSelect?.(newValue?.value, fieldName);
                 }
             }}
+            disableClearable={clearable}
         />
     );
 }

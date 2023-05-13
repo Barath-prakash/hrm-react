@@ -15,7 +15,8 @@ const CustomButton = ({
     className = '',
     fullWidth = false,
     showLoader = false,
-    colorSame = false
+    colorSame = false,
+    onClick = undefined
 }) => {
     return (
         <Button
@@ -27,7 +28,7 @@ const CustomButton = ({
             style={{ fontWeight: 'bold', ...style }}
             variant={variant}
             disabled={loading || disabled}
-            onClick={handleClick}
+            onClick={handleClick || onClick}
         >
             {(type === 'submit' || showLoader) && loading ? <CustomLoader /> : ''}{' '}
             <span>{name}</span>

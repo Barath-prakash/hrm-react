@@ -1,9 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-    CONST_FIELD_SELECT,
-    CONST_MODULE_DEPARTMENTS,
-    CONST_MODULE_DESIGNATIONS
-} from 'utils/constants';
+import { CONST_FIELD_SELECT, CONST_MODULE_DESIGNATIONS } from 'utils/constants';
 import FormBuilder from 'utils/formUtils/FormBuilder';
 import { formPostData } from 'utils/formUtils/commonUtils';
 import useValidateForm from 'utils/formUtils/useValidateForm';
@@ -12,7 +8,7 @@ import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
 import CustomCard from 'ui-component/CustomCard/CustomCard';
 import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
 import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
-import useAppContext from 'store/useAppContext';
+import { formStateByData } from 'utils/formUtils/formBuilderUtils';
 
 const initialState = {
     departmentId: {
@@ -20,11 +16,10 @@ const initialState = {
         fieldLabel: 'Department',
         fieldValue: 0,
         fieldType: CONST_FIELD_SELECT,
-        options: { md: 6, isReq: true, validationError: '', selectOptions: [] }
+        options: { md: 6, isReq: true, validationError: '', selectOptions: [], isNotField: true }
     },
     designationName: {
-        fieldName: 'designationtName',
-        fieldLabel: 'Name',
+        fieldName: 'designationName',
         fieldValue: '',
         options: { placeholder: 'Enter Designation Name', isReq: true, validationError: '' }
     },
@@ -37,23 +32,19 @@ const initialState = {
 };
 
 const DesignationForm = ({ postOrPut, designationsOne }) => {
-    const {
-        departmentsState: { departmentsData }
-    } = useAppContext();
     const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
     const { validateForm } = useValidateForm();
-    console.log('*******', useAppContext());
 
     useEffect(() => {
-        initialState.departmentId.options.selectOptions = formatToSelect(departmentsData);
-    }, []);
-    const formatToSelect = (passList) => {
-        return passList.map((el) => ({
-            label: el.departmentName,
-            value: el.departmentId
-        }));
-    };
-    console.log(formatToSelect);
+        if (designationsOne?.designationId) {
+            setContextState({
+                setState: getMethodByModule({ module: CONST_MODULE_DESIGNATIONS }),
+                paramName: 'formState',
+                paramValue: formStateByData(designationsOne, initialState)
+            });
+        }
+    }, [designationsOne?.designationId, JSON.stringify(designationsOne)]);
+
     const handleSubmit = async () => {
         const { isErrorExist, formState: payload } = validateForm(CONST_MODULE_DESIGNATIONS);
         if (!isErrorExist) {
@@ -78,6 +69,10 @@ const DesignationForm = ({ postOrPut, designationsOne }) => {
     return (
         <CustomRowColumns
             listToLoop={[
+                {
+                    element: null,
+                    md: 2
+                },
                 {
                     element: (
                         <CustomCard style={{ padding: 20 }}>
@@ -108,7 +103,7 @@ const DesignationForm = ({ postOrPut, designationsOne }) => {
                             />
                         </CustomCard>
                     ),
-                    md: 12
+                    md: 10
                 }
             ]}
         />

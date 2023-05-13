@@ -37,6 +37,13 @@ function createNumberListByGivenNumAndSize(num, size) {
     return Array.from({ length: num }, (_, i) => (i + 1) * size);
 }
 
+const formatDataToSelectComponent = ({ passList, labelParam, valueParam }) => {
+    return passList.map((el) => ({
+        label: el?.[labelParam],
+        value: el?.[valueParam]
+    }));
+};
+
 export {
     makeFirstCaps,
     capitalize,
@@ -44,5 +51,6 @@ export {
     getLocalStorage,
     dateFormat,
     isDomElement,
-    createNumberListByGivenNumAndSize
+    createNumberListByGivenNumAndSize,
+    formatDataToSelectComponent
 };

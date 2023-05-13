@@ -11,15 +11,17 @@ import {
     CONST_GETALL,
     CONST_POST,
     CONST_PUT,
-    CONST_LOCAL_STORAGE_LOGGED_USER,
     CONST_MODULE_DEPARTMENTS
 } from 'utils/constants';
-
 // Pagination
 import apiAction from 'utils/apiUtils/apiAction';
-import { getLocalStorage } from 'utils/commonFunc';
-import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
+import { formatDataToSelectComponent } from 'utils/commonFunc';
+import CustomCard from 'ui-component/CustomCard/CustomCard';
 import CustomSelect from 'ui-component/forms/CustomSelect';
+import CustomRowColumns from 'ui-component/CustomRowColumns/CustomRowColumns';
+import { setContextState } from 'utils/contextStoreUtils/setContextUtils';
+import useStoreAccessByModule from 'utils/contextStoreUtils/useStoreAccessByModule';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -28,18 +30,22 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const idName = 'designationtId';
+const idName = 'designationId';
 const Designations = () => {
     const classes = useStyles();
     const {
         crudMethods,
-        designationsMethods: { setDesignationsState },
-        designationsState: { page, size, designationsData, designationsOne }
+        departmentsState: { departmentsData },
+        designationsState: { page, size, designationsData, designationsOne, parentDepartmentId }
     } = useAppContext();
+    const { getMethodByModule, getStateParamDataByModule } = useStoreAccessByModule();
+
     const handleApiAction = ({
         action,
         module,
+        setState,
         payload,
+        idName,
         orgId,
         getId,
         getIdName,
@@ -49,12 +55,13 @@ const Designations = () => {
     }) => {
         return apiAction({
             crudMethods,
-            setState: setDesignationsState,
+            setState: setState || getMethodByModule({ module: CONST_MODULE_DESIGNATIONS }),
             module: module || CONST_MODULE_DESIGNATIONS,
             // pass params
             action,
             payload,
             orgId,
+            idName,
             getId,
             getIdName,
             // pagination
@@ -62,14 +69,41 @@ const Designations = () => {
             size,
             delId,
             refetchAll,
-            ...rest
+            ...rest,
+            // additional
+            departmentId: parentDepartmentId
+        });
+    };
+
+    //******** Department handler section start  ******/
+    useEffect(() => {
+        handleApiAction({
+            action: CONST_GETALL,
+            module: CONST_MODULE_DEPARTMENTS,
+            setState: getMethodByModule({ module: CONST_MODULE_DEPARTMENTS })
+        });
+    }, []);
+
+    const updateParentDepartment = (deptId) => {
+        setContextState({
+            setState: getMethodByModule({
+                module: CONST_MODULE_DESIGNATIONS
+            }),
+            paramName: 'parentDepartmentId',
+            paramValue: deptId
         });
     };
 
     useEffect(() => {
-        handleApiAction({ action: CONST_GETALL });
-        handleApiAction({ action: CONST_GETALL, module: CONST_MODULE_DEPARTMENTS });
-    }, [page, size]);
+        if (!parentDepartmentId && departmentsData?.length) {
+            updateParentDepartment(departmentsData?.[0]?.departmentId);
+        }
+    }, [JSON.stringify(departmentsData)]);
+    //******** Department handler section end  ******/
+
+    useEffect(() => {
+        parentDepartmentId && handleApiAction({ action: CONST_GETALL });
+    }, [page, size, parentDepartmentId]);
 
     const refetchAll = () => handleApiAction({ action: CONST_GETALL });
 
@@ -82,8 +116,7 @@ const Designations = () => {
     };
 
     const postOrPut = (payload) => {
-        const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
-        payload['designationId'] = orgId;
+        payload['departmentId'] = parentDepartmentId;
         return handleApiAction({
             action: payload?.[idName] ? CONST_PUT : CONST_POST,
             payload,
@@ -100,12 +133,49 @@ const Designations = () => {
             refetchAll
         });
     };
+
     const designationKeys = ['designationId', 'designationName'];
-    const designationHead = ['Designation ID', 'Designation Name'];
+    const designationHead = ['Designation ID', 'Designation Name', 'Action'];
+
+    const deptSelectOptions = formatDataToSelectComponent({
+        passList: departmentsData,
+        labelParam: 'departmentName',
+        valueParam: 'departmentId'
+    });
 
     return (
         <>
-            <DesignationForm postOrPut={postOrPut} designationsOne={designationsOne} />
+            <CustomRowColumns
+                listToLoop={[
+                    {
+                        element: (
+                            <CustomCard style={{ padding: 16 }}>
+                                <CustomSelect
+                                    fieldLabel="Main Deparment"
+                                    placeholder="Select..."
+                                    options={{ selectOptions: deptSelectOptions }}
+                                    onChange={updateParentDepartment}
+                                    fieldValue={getStateParamDataByModule({
+                                        module: CONST_MODULE_DESIGNATIONS,
+                                        passStateParamName: 'parentDepartmentId'
+                                    })}
+                                    clearable
+                                />
+                            </CustomCard>
+                        ),
+                        md: 4
+                    },
+                    {
+                        element: (
+                            <DesignationForm
+                                postOrPut={postOrPut}
+                                designationsOne={designationsOne}
+                            />
+                        ),
+                        md: 8
+                    }
+                ]}
+            ></CustomRowColumns>
 
             <Box className={classes.root}>
                 <CustomTable

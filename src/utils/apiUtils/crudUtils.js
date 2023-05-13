@@ -37,9 +37,17 @@ const appendPagination = (params, canAppend = false) => {
 
 const appendIds = (ids, args) => {
     const { orgId } = getLocalStorage(CONST_LOCAL_STORAGE_LOGGED_USER) || {};
-    const { idName } = args;
+    const { idName, getIdName } = args;
     return ids?.length
-        ? `/${ids.map((id) => (id === 'orgId' && orgId ? orgId : args?.[idName])).join('/')}`
+        ? `/${ids
+              .map((id) =>
+                  id === 'orgId' && orgId
+                      ? orgId
+                      : args?.[id || getIdName || idName]
+                      ? args?.[id || getIdName || idName]
+                      : ''
+              )
+              .join('/')}`
         : '';
 };
 

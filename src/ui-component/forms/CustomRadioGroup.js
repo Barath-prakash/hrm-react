@@ -12,7 +12,9 @@ export default function CustomRadioGroup({
     fieldValue,
     fieldName,
     options: { isReq, validations = [], validationError = '', selectOptions },
-    handleChange
+    handleChange,
+    onChange,
+    onSelect
 }) {
     return (
         <FormControl error={!!validationError} required={isReq}>
@@ -24,7 +26,11 @@ export default function CustomRadioGroup({
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
                 value={fieldValue}
-                onChange={(e) => handleChange(fieldName, e.target.value)}
+                onChange={(e) => {
+                    handleChange && handleChange?.(e.target.value, fieldName);
+                    onChange && onChange?.(e.target.value, fieldName);
+                    onSelect && onSelect?.(e.target.value, fieldName);
+                }}
             >
                 {selectOptions?.map((el, k) => (
                     <FormControlLabel

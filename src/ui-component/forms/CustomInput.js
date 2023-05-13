@@ -13,7 +13,8 @@ const CustomInput = ({
     fieldValue,
     options: { placeholder, isReq, validations = [], validationError = '' },
     type,
-    handleChange
+    handleChange,
+    onChange
 }) => {
     return (
         <TextField
@@ -29,7 +30,10 @@ const CustomInput = ({
             id={`${module}_${fieldValue}`}
             name={fieldName}
             value={fieldValue}
-            onChange={(e) => handleChange(fieldName, e.target.value)}
+            onChange={(e) => {
+                handleChange && handleChange?.(e.target.value, fieldName);
+                onChange && onChange?.(e.target.value, fieldName);
+            }}
             error={!!validationError}
             helperText={validationError || ''}
             // required={isReq}

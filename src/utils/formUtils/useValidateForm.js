@@ -10,7 +10,7 @@ const useValidateForm = () => {
         let isErrorExist = false;
         const stateObjList = Object.values(formState).map((el) => {
             if (!isErrorExist) {
-                isErrorExist = !!(el.options?.isReq && !el.fieldValue);
+                isErrorExist = !!(!el?.options?.isNotField && el.options?.isReq && !el.fieldValue);
             }
             return {
                 ...el,

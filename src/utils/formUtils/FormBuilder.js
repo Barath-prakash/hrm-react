@@ -36,7 +36,7 @@ const FormBuilder = ({ initialState = {}, module = '' }) => {
 
     const formState = getStateParamDataByModule({ module, passStateParamName: 'formState' });
 
-    const handleChange = (fieldName, fieldValue) => {
+    const handleChange = (fieldValue, fieldName) => {
         const newState = {
             ...formState,
             [fieldName]: {

@@ -14,7 +14,7 @@ const employees = {
     type: 'group',
     children: [
         {
-            id: 'employees-main',
+            id: 'employees',
             title: 'Employees',
             type: 'item',
             url: '/employees',

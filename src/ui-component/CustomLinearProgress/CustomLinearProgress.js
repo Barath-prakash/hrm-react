@@ -6,7 +6,7 @@ const CustomLinearProgress = () => {
     const {
         employeesState: { getAllFetching: empGetAllFetching, getFetching: empGetFetching } = {},
         departmentsState: { getAllFetching: depGetAllFetching, getFetching: depGetFetching } = {},
-        desingationsState: { getAllFetching: desGetAllFetching, getFetching: desGetFetching } = {}
+        designationsState: { getAllFetching: desGetAllFetching, getFetching: desGetFetching } = {}
     } = useAppContext();
 
     const loaders = [

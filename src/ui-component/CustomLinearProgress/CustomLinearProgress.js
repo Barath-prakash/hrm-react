@@ -4,10 +4,19 @@ import useAppContext from 'store/useAppContext';
 
 const CustomLinearProgress = () => {
     const {
-        employeesState: { getAllFetching: empGetAllFetching, getFetching: empGetFetching }
+        employeesState: { getAllFetching: empGetAllFetching, getFetching: empGetFetching } = {},
+        departmentsState: { getAllFetching: depGetAllFetching, getFetching: depGetFetching } = {},
+        desingationsState: { getAllFetching: desGetAllFetching, getFetching: desGetFetching } = {}
     } = useAppContext();
 
-    const loaders = [empGetAllFetching, empGetFetching];
+    const loaders = [
+        empGetAllFetching,
+        // empGetFetching,
+        depGetAllFetching,
+        // depGetFetching,
+        desGetAllFetching
+        // desGetFetching
+    ];
 
     const isLoading = loaders.includes(true);
 
